@@ -1,0 +1,5 @@
+Meteor.subscribe('dailyscrum');
+
+                             
+
+
