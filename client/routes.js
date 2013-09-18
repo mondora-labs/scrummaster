@@ -8,8 +8,13 @@ Meteor.Router.add({
 			Session.set('currentProduct', id);
 	    }
 	},            
-	'/': 'home'     
-	
-	
+   '/': 'home',
+   '/team/:_id': {
+		to: 'team',
+		and: function(id) {   
+			Session.set('currentTeam', id);
+	    }
+	}            
+
 });
 
