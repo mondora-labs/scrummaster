@@ -2,22 +2,20 @@
 
 Meteor.Router.add({
 
-   '/dailyscrum/:_id': {
+   '/:product/dailyscrum/:team': {
 		to: 'dailyscrum',
-		and: function(id) {   
-			Session.set('currentProduct', id);
-		    Session.set('currentPage', 'dailyscrum');
-	    }
+		and: function(id) {
+            Session.set('currentTeam', team);
+            Session.set('currentProduct', product);	    }
 	},            
-   
-   '/team/:_id': {
+   '/': 'home',
+   '/:product/team/:team': {
 		to: 'team',
-		and: function(id) {   
-			Session.set('currentTeam', id);
-		    Session.set('currentPage', 'team');
+		and: function(product, team) {
+			Session.set('currentTeam', team);
+			Session.set('currentProduct', product);
 	    }
-	},
-   '/': 'home'            
+	}            
 
 });
 

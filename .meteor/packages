@@ -6,12 +6,9 @@
 standard-app-packages
 insecure
 preserve-inputs
-bootstrap-updated
 font-awesome
 router
 accounts-ui
-accounts-ui-bootstrap-dropdown
-accounts-password
 foundation
 crypto-md5
 accounts-google
