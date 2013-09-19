@@ -25,7 +25,7 @@ var sendMessage = function (mailFrom, mailTo, msg) {
     // salvo in InvitationToken il token appen creato
     InvitationToken.insert({token: result.token, product: 'Matutor', team: 'Moschettieri'});
 
-    var link = Meteor.absoluteUrl()+"joinTeam/moschettieri?" + result.token;
+    var link = Meteor.absoluteUrl()+"matutorBis/joinTeam/moschettieri?" + result.token;
 
     Email.send({
         from: mailFrom,

@@ -1,10 +1,19 @@
 Meteor.subscribe('invitationToken');
 
 function selectedToken(){
-    return InvitationToken.findOne( {token: ''});
+   // return InvitationToken.find(); // tutti i token
+    var token =  InvitationToken.findOne( {token: this.location.href.substring(this.location.href.indexOf('?')+1)}); // solo il token corrente
+    if (token) {
+        alert('token trovato');
+        // se il token viene riconosciuto,
+        // creazione utente
+        // login utente
+        // rimozione token
+    }
+    return token;
 }
 
-Template.team.helpers({
+Template.joinTeam.helpers({
     tokens: function() {
         return selectedToken() ;
     }

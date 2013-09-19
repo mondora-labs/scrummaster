@@ -15,7 +15,15 @@ Meteor.Router.add({
 			Session.set('currentTeam', team);
 			Session.set('currentProduct', product);
 	    }
-	}            
+	},
+
+    '/:product/joinTeam/:team': {
+        to: 'joinTeam',
+        and: function(product, team) {
+            Session.set('currentTeam', team);
+            Session.set('currentProduct', product);
+        }
+    }
 
 });
 
