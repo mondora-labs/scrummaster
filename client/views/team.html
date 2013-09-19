@@ -96,7 +96,7 @@
               <ul class="padded separate-sections">
 
                 <li class="input">
-                  <input type="text" placeholder="Email"/>
+                  <input type="text" placeholder="Email" id="invitationMail"/>
                 </li>
 
 
@@ -120,7 +120,7 @@
             </div>
           </div>
           <div class="form-actions">
-            <button type="submit" class="btn btn-blue">Update and invite</button>
+            <button type="submit" class="btn btn-blue sendMail">Update and invite</button>
             <button type="button" class="btn btn-default">Cancel</button>
           </div>
         </form>
@@ -167,5 +167,8 @@
 
 
   </div>
-
+    <h3>tokens</h3>
+                 {{# each tokens}}
+    {{token}} - {{product}} - {{team}}
+                 {{/ each}}
 </template>

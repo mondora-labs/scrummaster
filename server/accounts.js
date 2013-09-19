@@ -1,8 +1,8 @@
 Accounts.onCreateUser(function (options, user) {
 
-       var accessToken = user.services.google.accessToken,
-           result,
-           profile;
+    var accessToken = user.services.google.accessToken,
+        result,
+        profile;
 
        result = Meteor.http.get("https://www.googleapis.com/oauth2/v3/userinfo", {
            headers: {"User-Agent": "Meteor/1.0"},
@@ -33,3 +33,8 @@ Accounts.onCreateUser(function (options, user) {
 
        return user;
    });
+
+
+Accounts._generateStampedLoginToken = function () {
+    return {token: Random.id(), when: +(new Date)};
+};

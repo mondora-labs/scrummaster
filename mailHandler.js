@@ -6,7 +6,7 @@ if (Meteor.isServer) {
 if (Meteor.isClient) {
     Template.team.events({
         'click .sendMail' : function () {
-            var msg = "Subscribe to ScrumMaster!!! ";//document.getElementById("message").value;
+            var msg = " invites you to join ScrumMaster!!! \n Click the link below: \n";//document.getElementById("message").value;
             var mailTo = document.getElementById('invitationMail').value;
             Meteor.call('sendMessage', mailTo, msg);
         }
@@ -15,13 +15,26 @@ if (Meteor.isClient) {
 
 
 var sendMessage = function (mailFrom, mailTo, msg) {
+
+    // generazione token
+    var result = {};
+    var stampedToken = Accounts._generateStampedLoginToken();
+    result.token = stampedToken.token;
+    console.log(result.token);
+
+    // salvo in InvitationToken il token appen creato
+    InvitationToken.insert({token: result.token, product: 'Matutor', team: 'Moschettieri'});
+
+    var link = Meteor.absoluteUrl()+"joinTeam/moschettieri?" + result.token;
+
     Email.send({
         from: mailFrom,
         to: mailTo,
         replyTo: mailFrom || undefined,
-        subject: "ScrumMaster: "+mailFrom+" sent you this email !",
+        subject: "ScrumMaster Join Request",
         text: "Hello "+mailTo+",\n\n"+
-            msg+"\n\n"+
+            Meteor.users.findOne(Meteor.userId).profile.name + msg +
+            link + "\n\n"+
 
             "ScrumMaster Team.\n"+
             Meteor.absoluteUrl()+"\n"
@@ -30,7 +43,9 @@ var sendMessage = function (mailFrom, mailTo, msg) {
 Meteor.methods({
     'sendMessage': function (mailTo, msg) {
         if (Meteor.isServer)
-        //TODO al posto di  postmaster, si potrebbe pensare di prendere la mail dell'utente loggato
+        // al posto di  "postmaster@scrummaster.com", si potrebbe pensare di prendere la mail dell'utente loggato
+        // Meteor.users.findOne(Meteor.userId).profile.email
             sendMessage("postmaster@scrummaster.com", mailTo, msg);
     }
 });
+
