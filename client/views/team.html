@@ -48,7 +48,7 @@
 
     <div class="box">
       <div class="box-header">
-        <span class="title">Team</span>
+        <span class="title">Team Moschettieri</span>
         <ul class="box-toolbar">
           <li>
             <i class="icon-refresh"></i>
@@ -75,23 +75,10 @@
             <div class="span6">
 
               <ul class="padded separate-sections">
-                <li>
-                  <h3 class="title">
-                      Team Moschettieri
-                  </h3>
-                </li>
 
-                <li class="input">
-                  <input type="text" placeholder="Email"/>
-                </li>
-
-                <li class="input">
-                  <input type="text" placeholder="Name"/>
-                </li>
-
-                <li class="input">
-                  <input type="text" placeholder="Surname"/>
-                </li>
+                  {{#each user}}
+                    {{> userTeam}}
+                  {{/each}}
 
      <!--
                 <li>
@@ -103,11 +90,11 @@
 
                     <option value="Almond">Almond</option></select>
                 </li>
-                        -->
+
                 <li class="input">
                   <label>Tags:</label>
                   <textarea class="tags" placeholder="This is a textarea">tag1,tag2,tag3</textarea>
-                </li>
+                </li> -->
               </ul>
             </div>
 
