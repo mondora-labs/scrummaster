@@ -7237,7 +7237,7 @@ a.badge:focus
 {
     content: "\f115"
 }
-@media (min-width:768px) and (max-width:979px)0
+@media (min-width:768px) and (max-width:979px)
 { 
 	.hidden-desktop
 	{
@@ -7254,7 +7254,7 @@ a.badge:focus
 	.hidden-tablet
 	{
 	    display: none !important
-	}0
+	}
 }
 .fc
 {
