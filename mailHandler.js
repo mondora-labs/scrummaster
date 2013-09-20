@@ -13,7 +13,10 @@ if (Meteor.isClient) {
             var current_team = Session.get('currentTeam');
             var current_product = Session.get('currentProduct');
 
-            Meteor.call('sendInvitation', mailTo, msg, function (error, result) {
+            console.log("@@@ current team: "+current_team );
+            console.log("@@@ current product: "+current_product );
+
+            Meteor.call('sendInvitation', mailTo, msg, current_team, current_product, function (error, result) {
 
                 if (error) {
                     //notify that there's a problem
@@ -44,12 +47,18 @@ if (Meteor.isClient) {
 }
 
 
-var sendInvitation = function (mailFrom, mailTo, msg, current_team, current_product) {
+var sendInvitation = function ( mailFrom, mailTo, msg, current_team, current_product) {
 
     // generazione token
     var result = {};
     var stampedToken = Accounts._generateStampedLoginToken();
     result.token = stampedToken.token;
+
+    console.log("mailFrom: "+mailFrom);
+    console.log("mailTo: "+mailTo);
+    console.log("msg: "+msg);
+    console.log("current_team: "+current_team);
+    console.log("current_product: "+current_product);
 
     // salvo in InvitationToken il token appen creato
 
@@ -80,11 +89,11 @@ var sendInvitation = function (mailFrom, mailTo, msg, current_team, current_prod
     });
 }
 Meteor.methods({
-    'sendInvitation': function (mailTo, msg) {
+    'sendInvitation': function (mailTo, msg, current_team, current_product) {
         if (Meteor.isServer)
         // al posto di  "postmaster@scrummaster.com", si potrebbe pensare di prendere la mail dell'utente loggato
         // Meteor.users.findOne(Meteor.userId).profile.email
-            sendInvitation("postmaster@scrummaster.com", mailTo, msg);
+            sendInvitation("postmaster@scrummaster.com", mailTo, msg, current_team, current_product);
     }
 });
 
