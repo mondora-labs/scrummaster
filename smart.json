@@ -9,7 +9,6 @@
     "router": {},
     "accounts-ui-bootstrap-dropdown": {},
     "foundation": {},
-    "crypto-md5": {},
-    "email": {}
+    "crypto-md5": {}
   }
 }
