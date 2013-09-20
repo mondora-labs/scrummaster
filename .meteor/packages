@@ -12,3 +12,5 @@ accounts-ui
 foundation
 crypto-md5
 accounts-google
+email
+accounts-base
