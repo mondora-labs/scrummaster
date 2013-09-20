@@ -13,8 +13,28 @@ if (Meteor.isClient) {
             var current_team = Session.get('currentTeam');
             var current_product = Session.get('currentProduct');
 
-            Meteor.call('sendInvitation', mailTo, msg, current_team, current_product);
-            //notify that the invitation has been sent
+            Meteor.call('sendInvitation', mailTo, msg, function (error, result) {
+
+                if (error) {
+                    //notify that there's a problem
+                    $.pnotify({
+                        title: 'Error!',
+                        text: '\nProblem while sending invitation to '+ mailTo +'\n'+((error.message) ? error.message : ''),
+                        type: 'error',
+                        hide: false
+                    });
+                }
+                else {
+                    //notify that the invitation has been sent
+                    $.pnotify({
+                        title: 'Success!',
+                        text: '\nInvitation to '+ mailTo +' has been sent!',
+                        type: 'success',
+                        hide: false
+                    });
+                }
+
+            });            //notify that the invitation has been sent
             //todo send a notification
             $('#invitationMail').val("");
             //prevent reload

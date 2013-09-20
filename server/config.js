@@ -8,4 +8,3 @@ Accounts.loginServiceConfiguration.insert({
            secret: "z3du3lBwP8bur_WDYOYr8vnJ"
 });
 
-Accounts.config ({sendVerificationEmail: true, forbidClientAccountCreation: false});

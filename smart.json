@@ -9,6 +9,7 @@
     "router": {},
     "accounts-ui-bootstrap-dropdown": {},
     "foundation": {},
-    "crypto-md5": {}
+    "crypto-md5": {},
+    "pnotify": {}
   }
 }
