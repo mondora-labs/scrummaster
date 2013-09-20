@@ -10,7 +10,10 @@ if (Meteor.isClient) {
         'click .sendMail' : function () {
             var msg = " invites you to join ScrumMaster!!! \n Click the link below: \n";
             var mailTo = $('#invitationMail').val();
-            Meteor.call('sendInvitation', mailTo, msg);
+            var current_team = Session.get('currentTeam');
+            var current_product = Session.get('currentProduct');
+
+            Meteor.call('sendInvitation', mailTo, msg, current_team, current_product);
             //notify that the invitation has been sent
             //todo send a notification
             $('#invitationMail').val("");
@@ -21,7 +24,7 @@ if (Meteor.isClient) {
 }
 
 
-var sendInvitation = function (mailFrom, mailTo, msg) {
+var sendInvitation = function (mailFrom, mailTo, msg, current_team, current_product) {
 
     // generazione token
     var result = {};
@@ -29,8 +32,7 @@ var sendInvitation = function (mailFrom, mailTo, msg) {
     result.token = stampedToken.token;
 
     // salvo in InvitationToken il token appen creato
-    var current_team = Session.get('currentTeam');
-    var current_product = Session.get('currentProduct');
+
     var timestamp = new Date();
 
 
