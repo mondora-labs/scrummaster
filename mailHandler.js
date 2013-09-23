@@ -10,7 +10,13 @@ if (Meteor.isClient) {
         'click .sendMail' : function () {
             var msg = " invites you to join ScrumMaster!!! \n Click the link below: \n";
             var mailTo = $('#invitationMail').val();
-            Meteor.call('sendInvitation', mailTo, msg, function (error, result) {
+            var current_team = Session.get('currentTeam');
+            var current_product = Session.get('currentProduct');
+
+            console.log("@@@ current team: "+current_team );
+            console.log("@@@ current product: "+current_product );
+
+            Meteor.call('sendInvitation', mailTo, msg, current_team, current_product, function (error, result) {
 
                 if (error) {
                     //notify that there's a problem
@@ -31,9 +37,8 @@ if (Meteor.isClient) {
                     });
                 }
 
-            });
-
-
+            });            //notify that the invitation has been sent
+            //todo send a notification
             $('#invitationMail').val("");
             //prevent reload
             return false;
@@ -42,50 +47,53 @@ if (Meteor.isClient) {
 }
 
 
-var sendInvitation = function (mailFrom, mailTo, msg) {
+var sendInvitation = function ( mailFrom, mailTo, msg, current_team, current_product) {
 
     // generazione token
     var result = {};
     var stampedToken = Accounts._generateStampedLoginToken();
     result.token = stampedToken.token;
 
-    // salvo in InvitationToken il token appena creato
- //   var current_team = Session.get('currentTeam');
- //   var current_product = Session.get('currentProduct');
-    var current_team = 'moschettieri';
-    var current_product = 'matutorbis';
+    console.log("mailFrom: "+mailFrom);
+    console.log("mailTo: "+mailTo);
+    console.log("msg: "+msg);
+    console.log("current_team: "+current_team);
+    console.log("current_product: "+current_product);
+
+    // salvo in InvitationToken il token appen creato
+
     var timestamp = new Date();
+
+
 
     InvitationToken.insert({token: result.token, product: current_product, team: current_team, date: timestamp});
 
     var link = Meteor.absoluteUrl() + current_product + "/joinTeam/" + current_team + "?" + result.token;
+
 
     var current_user = Meteor.users.findOne(  Meteor.userId() );
 
     console.dir("Current user: " + JSON.stringify(current_user));
 
     Email.send({
-            from: mailFrom,
-            to: mailTo,
-            replyTo: mailFrom || undefined,
-            subject: "ScrumMaster Join Request",
-            // todo internazionalizzazione messaggio
-            text: "Hello "+mailTo+",\n\n"+
-                current_user.profile.given_name + msg +
-                link + "\n\n"+
+        from: mailFrom,
+        to: mailTo,
+        replyTo: mailFrom || undefined,
+        subject: "ScrumMaster Join Request",
+        text: "Hello "+mailTo+",\n\n"+
+            current_user.profile.given_name + msg +
+            link + "\n\n"+
 
-                "ScrumMaster Team.\n"+
-                Meteor.absoluteUrl()+"\n"
+            "ScrumMaster Team.\n"+
+            Meteor.absoluteUrl()+"\n"
     });
-
-    return true;
 }
 Meteor.methods({
-    'sendInvitation': function (mailTo, msg) {
+    'sendInvitation': function (mailTo, msg, current_team, current_product) {
         if (Meteor.isServer)
         // al posto di  "postmaster@scrummaster.com", si potrebbe pensare di prendere la mail dell'utente loggato
         // Meteor.users.findOne(Meteor.userId).profile.email
-            sendInvitation("postmaster@scrummaster.com", mailTo, msg);
+            sendInvitation("postmaster@scrummaster.com", mailTo, msg, current_team, current_product);
     }
 });
 

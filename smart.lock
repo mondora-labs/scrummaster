@@ -11,7 +11,8 @@
       "router": {},
       "accounts-ui-bootstrap-dropdown": {},
       "foundation": {},
-      "crypto-md5": {}
+      "crypto-md5": {},
+      "pnotify": {}
     },
     "packages": {
       "bootstrap-updated": {
@@ -43,6 +44,11 @@
         "git": "https://github.com/tmeasday/meteor-crypto-md5.git",
         "tag": "v0.0.2",
         "commit": "a943bea4cffeac9a14c2825dfe57d32b9d677e6f"
+      },
+      "pnotify": {
+        "git": "https://github.com/kidovate/meteor-pnotify.git",
+        "tag": "v0.1.0",
+        "commit": "1799e7a19759f8f5e8f2debd240024ee36f42fbc"
       },
       "page-js-ie-support": {
         "git": "https://github.com/tmeasday/meteor-page-js-ie-support.git",
