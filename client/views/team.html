@@ -106,16 +106,8 @@
             <div class="span6">
 
               <ul class="padded separate-sections">
-                  <li><img class="menu-avatar" src="https://lh4.googleusercontent.com/-2L5LK_vIIuQ/AAAAAAAAAAI/AAAAAAAAAjk/nymGrgsgg7I/photo.jpg">
-                  <a href="/user/francescomondora"> Francesco Mondora</a> [ <a href="#ban">Ban!</a> | <a href="#ban">Delete!</a> ]
+                  {{> userTeam}}
 
-
-                  </li>
-
-
-                  <li><img class="menu-avatar" src="https://lh3.googleusercontent.com/-LvnlpR-c3Wg/AAAAAAAAAAI/AAAAAAAAAAA/WcOBSmrHA04/s48-c/photo.jpg">
-                      davide.morri@mondora.com (invited) [ <a href="#inviteagain">Invite Again</a> | <a href="#ban">Delete!</a> ]
-                  </li>
               </ul>
             </div>
           </div>
@@ -167,4 +159,22 @@
 
 
   </div>
+</template>
+
+
+<template name="userTeam">
+  <!--
+    <li><img class="menu-avatar" src="https://lh4.googleusercontent.com/-2L5LK_vIIuQ/AAAAAAAAAAI/AAAAAAAAAjk/nymGrgsgg7I/photo.jpg">
+        <a href="/user/francescomondora"> Francesco Mondora</a> [ <a href="#ban">Ban!</a> | <a href="#ban">Delete!</a> ]
+    </li>
+
+    <li><img class="menu-avatar" src="https://lh3.googleusercontent.com/-LvnlpR-c3Wg/AAAAAAAAAAI/AAAAAAAAAAA/WcOBSmrHA04/s48-c/photo.jpg">
+        davide.morri@mondora.com (invited) [ <a href="#inviteagain">Invite Again</a> | <a href="#ban">Delete!</a> ]
+    </li>
+    -->
+    {{#each users}}
+        <li><img class="menu-avatar" src="{{picture}}">
+        {{name}}
+        </li>
+    {{/each}}
 </template>
