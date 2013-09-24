@@ -17,7 +17,8 @@ function filterUserTeam(){
 
                 var userItem = {
                     name: currentUser.profile.name,
-                    picture: currentUser.profile.picture
+                    picture: currentUser.profile.picture,
+                    id: userIds[i]
                 };
 
                 userData.push(userItem);
@@ -38,3 +39,4 @@ Template.userTeam.helpers ({
         return filterUserTeam() ;
     }
 });
+

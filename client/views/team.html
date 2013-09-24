@@ -174,7 +174,7 @@
     -->
     {{#each users}}
         <li><img class="menu-avatar" src="{{picture}}">
-        {{name}}
+            <a href="/user/{{id}}"> {{name}}</a> [ <a href="#ban">Ban!</a> | <a href="#ban">Delete!</a> ]
         </li>
     {{/each}}
 </template>

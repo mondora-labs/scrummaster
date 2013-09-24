@@ -64,6 +64,7 @@ Template.joinTeam.events({
             }
 
             var token = getToken();
+            // todo commentato per debug, è da decommentare
        //     if (token)
        //         InvitationToken.remove(token._id);
 
