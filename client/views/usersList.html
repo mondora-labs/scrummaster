@@ -1,4 +1,4 @@
-<template name="userDetail">
+<template name="usersList">
 
     <div class="container-fluid">
         <div class="row-fluid">
@@ -7,7 +7,7 @@
                 <div class="pull-left header">
                     <h3 class="title">
                         <i class="icon-edit"></i>
-                        User Details
+                        Users List
                     </h3>
                     <h5>
                         Some info...
@@ -51,7 +51,7 @@
 
                 <div class="breadcrumb-button">
           <span class="breadcrumb-label">
-            <i class="icon-edit"></i> User: {{userProfile.name}}
+            <i class="icon-edit"></i> Users List
           </span>
                     <span class="breadcrumb-arrow"><span></span></span>
                 </div>
@@ -59,46 +59,27 @@
         </div>
     </div>
 
-    {{#if userProfile}}
     <div class="container-fluid padded">
         <div class="row-fluid">
-            <div class="span4">
-                <img height="180px" src="{{userProfile.picture}}" alt="{{userProfile.name}}"/>
-            </div>
             <div class="span6">
-                <ul class="padded separate-sections">
 
-                        <li>
-                            <label><strong>NAME</strong></label>
-                            <label style="left: 5%;position: relative;">{{userProfile.given_name}}</label>
+                {{#each productList}}
+                <fieldset style="border: solid 1px #ddd ! important; padding: 1.25em ! important;">
+                    <h3>{{name}}</h3>
+                    <ul class="padded separate-sections">
+                        {{#each users}}
+                        <li><img class="menu-avatar" src="{{profile.picture}}">
+                            <a href="/user/{{_id}}">{{profile.name}}</a> [ <a href="#ban">Ban!</a> | <a href="#ban">Delete!</a> ]
                         </li>
-                        <li>
-                            <label><strong>SURNAME</strong></label>
-                            <label style="left: 5%;position: relative;">{{userProfile.family_name}}</label>
-                        </li>
-
-                        {{#if userProfile.email_verified}}
-                        <li>
-                            <label><strong>EMAIL</strong></label>
-                            <label style="color:green; left: 5%;position: relative;">{{userProfile.email}} (verified)</label>
-                        </li>
-                        {{else }}
-                        <li>
-                            <label><strong>EMAIL</strong></label>
-                            <label style="color:red; left: 5%;position: relative;">{{userProfile.email}} (not verified)</label>
-                        </li>
-                        {{/if}}
-
-                        <li>
-                            <label><strong>TEAMS</strong></label>
-                            <label style="left: 5%;position: relative;">[TODO] - Qui andranno i team di appartenenza, mostrati come elenco di link alla pagina del team</label>
-                        </li>
-                </ul>
+                        {{/each}}
+                    </ul>
+                </fieldset>
+                {{/each}}
             </div>
-        </div>
 
+        </div>
     </div>
-    {{/if }}
+
 
     <div class="container-fluid padded">
         <div class="row-fluid">

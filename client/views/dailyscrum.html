@@ -1,3 +1,161 @@
 <template name="dailyscrum">
-  <h2 class="test">this is the placeholder for the daily scrum </h2>
+
+
+    <div class="container-fluid">
+        <div class="row-fluid">
+
+            <div class="area-top clearfix">
+                <div class="pull-left header">
+                    <h3 class="title">
+                        <i class="icon-edit"></i>
+                        Daily Scrum
+                    </h3>
+                </div>
+
+                <ul class="inline pull-right sparkline-box">
+
+                    <li class="sparkline-row">
+                        <h4 class="blue"><span>Commits</span> 847</h4>
+                        <div class="sparkline big" data-color="blue"><!--4,5,3,1,0,10,9,3,0,4--></div>
+                    </li>
+
+                    <li class="sparkline-row">
+                        <h4 class="green"><span>Updates</span> 12</h4>
+                        <div class="sparkline big" data-color="green"><!--24,10,13,15,3,7,8,29,7,14,13,23--></div>
+                    </li>
+
+                    <li class="sparkline-row">
+                        <h4 class="red"><span>Pomodoros</span> 83 so far</h4>
+                        <div class="sparkline big"><!--4,,7,12,12,3,4,5,9,9--></div>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid padded">
+        <div class="row-fluid">
+
+            <!-- Breadcrumb line -->
+
+            <div id="breadcrumbs">
+                <div class="breadcrumb-button blue">
+                    <span class="breadcrumb-label"><i class="icon-home"></i> Home</span>
+                    <span class="breadcrumb-arrow"><span></span></span>
+                </div>
+
+
+
+                <div class="breadcrumb-button">
+          <span class="breadcrumb-label">
+            <i class="icon-edit"></i>Daily Scrum
+          </span>
+                    <span class="breadcrumb-arrow"><span></span></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid padded">
+        <div class="row-fluid">
+            <div>
+                <h3 style="text-align: center;">TEAM</h3>
+
+                <div id="divTeamList">
+                    <p style="width:10%; display: inline-block; float:left;">
+                        <label>Date:</label>
+                        <input type="text" id="datepicker"/>
+                    </p>
+
+                    <ul class="padded separate-sections" style="display: inline-block; width:80%" id="teamlist">
+                        <li class="selected">
+                            <label>Moschettieri</label>
+                            <img style="width: 70px;" src="http://3.bp.blogspot.com/-8dPgVxgmoo8/TfYnmUHPF7I/AAAAAAAALng/s2TId6zrK9Y/s1600/4Moschettieri.jpg" alt="logo"/>
+                        </li>
+                        <li>
+                            <label>Team 1</label>
+                            <img style="width: 70px;" src="../images/avatars/avatar1.jpg" alt="logo"/>
+                        </li>
+                        <li>
+                            <label>Team 2</label>
+                            <img style="width: 70px;" src="../images/avatars/avatar2.jpg" alt="logo"/>
+                        </li>
+                        <li>
+                            <label>Team 3</label>
+                            <img style="width: 70px;" src="../images/avatars/avatar3.jpg" alt="logo"/>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr width="100%" color="#000000" noshade="false"/>
+
+    <div class="container-fluid padded">
+        <div class="row-fluid">
+            <h5>Yesterday</h5>
+
+                <div class="scrumElement" style="left: 3%">
+                    <label align="center"><strong>PAIR</strong></label>
+                    <img src="../images/avatars/avatar1.jpg" alt="logo"/>
+                    <img src="../images/avatars/avatar2.jpg" alt="logo"/>
+                    <br/>
+                    <img src="../images/avatars/avatar3.jpg" alt="logo"/>
+                </div>
+                <div class="scrumElement" style="left: 6%">
+                    <label align="center">
+                        <strong>TASKS</strong>
+                    </label>
+                    <input value="Task1" disabled="true"/>
+                    <br/>
+                    <input value="Task2" disabled="true"/>
+                </div>
+                <div class="scrumElement" style="left: 9%">
+                    <label align="center">
+                        <strong>ISSUES</strong>
+                    </label>
+                    <textarea rows="4" cols="30" disabled="true">Some issues...</textarea>
+                </div>
+
+        </div>
+    </div>
+
+    <hr width="100%" color="#000000" noshade="false"/>
+
+    <div class="container-fluid padded">
+        <div class="row-fluid">
+            <h5>Today</h5>
+
+            <div class="scrumElement" style="left: 3%">
+                <label align="center"><strong>PAIR</strong></label>
+                <img src="../images/avatars/avatar2.jpg" alt="logo"/>
+                <img src="../images/avatars/avatar3.jpg" alt="logo"/>
+                <br/>
+                <img src="../images/avatars/avatar1.jpg" alt="logo"/>
+            </div>
+            <div class="scrumElement" style="left: 6%">
+                <label align="center">
+                    <strong>TASKS</strong>
+                </label>
+                <input value="Today Task3"/>
+                <br/>
+                <input value="Today Task4"/>
+            </div>
+            <div class="scrumElement" style="left: 9%">
+                <label align="center">
+                    <strong>ISSUES</strong>
+                </label>
+                <textarea rows="4" cols="30">Some today issues...</textarea>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="form-actions">
+        <button type="submit" class="btn btn-blue sendMail">Save</button>
+        <button type="button" class="btn btn-default">Cancel</button>
+    </div>
+
 </template>

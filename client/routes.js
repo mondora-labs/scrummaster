@@ -25,13 +25,18 @@ Meteor.Router.add({
         }
     },
 
+   // gestione separata per pagina Users e pagina UserDetail
+    '/user/usersList': 'usersList',
+
     '/user/:id': {
         to: 'userDetail',
         and: function(id) {
             Session.set('userId',id);
         }
 
-    }
+    },
+
+    '/dailyscrum' : 'dailyscrum'
 
 });
 

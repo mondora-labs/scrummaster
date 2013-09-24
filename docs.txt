@@ -25,3 +25,11 @@ DailyScrum.insert( {  name: "Daily Scrum", date:d, dailyscrum:{ yesterday: [ {pl
 Products.update( {_id: "Ybhp3fCfcWtDrdryj"} , {$set:{name: 'Zanichelli Matutor Bis'}} );
 https://atmosphere.meteor.com/package/crypto-md5
 templates: https://wrapbootstrap.com
+
+== ricerca con più di un parametro (and)
+Meteor.users.find({
+      $and: [
+        {_id: {$ne: Meteor.userId()}},
+        {username: Session.get('searchedName')}
+      ]
+    });

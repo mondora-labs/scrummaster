@@ -30,3 +30,46 @@
 .icon-stop {
     background-position: -312px -72px;
 }
+
+#divTeamList {
+    width: 100%;
+    overflow: hidden;
+}
+
+#teamlist {
+    list-style: none;
+    position: relative;
+    float: left;
+    display: block;
+    border: solid 1px #ddd ! important; padding: 1.25em ! important;
+    left: 5%;
+    /*left: 50%;*/
+}
+
+#teamlist li {
+    display: inline-block;
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
+.selected {
+    border:solid 3px #00A ! important;
+}
+
+.scrumElement {
+    float:left;
+    width:30%;
+    border: solid 1px #ddd ! important;
+    padding-left: 3%;
+    position: relative;
+    height: 167px;
+}
+
+.scrumElement img {
+    width: 50px;
+    margin: 10px;
+}
+
+.scrumElement input {
+    margin-bottom:5%;
+}
