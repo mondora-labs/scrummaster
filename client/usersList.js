@@ -1,16 +1,16 @@
 function getUsersListPerProducts(){
 
-    // Fetch all the Products with 'scrummaster' attribute = logged-in user
-    var products = Products.find({'scrummaster' : Meteor.userId()}).fetch();
+    var products = Products.find().fetch();
 
-    products.forEach(function(data){
-        data.users = new Array();
-        data.allowedusers.forEach(function(innerData){
-                var tmpUser = Meteor.users.findOne({'_id':innerData});
-                if (tmpUser)
-                    data.users.push(tmpUser);
-            }
-        );
+    products.forEach(function(tmpProduct){
+        tmpProduct.team.forEach(function(tmpTeam){
+            tmpTeam.members.forEach(function(tmpUser){
+                tmpTeam.users = new Array();
+                var currentUser = Meteor.users.findOne({'_id':tmpUser});
+                if (currentUser)
+                    tmpTeam.users.push(currentUser);
+            });
+        });
     });
 
     return products;

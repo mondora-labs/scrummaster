@@ -1,5 +1,5 @@
 <template name="team">
-
+  {{#with teamInfo}}
   <div class="container-fluid">
     <div class="row-fluid">
 
@@ -7,10 +7,10 @@
         <div class="pull-left header">
           <h3 class="title">
             <i class="icon-edit"></i>
-            I moschettieri
+            {{name}}
           </h3>
           <h5>
-            Tutti per uno, uno per tutti.
+            {{motto}}
           </h5>
         </div>
 
@@ -51,7 +51,7 @@
 
         <div class="breadcrumb-button">
           <span class="breadcrumb-label">
-            <i class="icon-edit"></i> Team: I moschettieri
+            <i class="icon-edit"></i> Team: {{name}}
           </span>
           <span class="breadcrumb-arrow"><span></span></span>
         </div>
@@ -62,7 +62,7 @@
   <div class="container-fluid padded">
     <div class="row-fluid">
         <div class="span4">
-            <img height="180px" src="http://3.bp.blogspot.com/-8dPgVxgmoo8/TfYnmUHPF7I/AAAAAAAALng/s2TId6zrK9Y/s1600/4Moschettieri.jpg" alt="logo"/>
+            <img height="180px" src="{{picture}}" alt="logo"/>
             <!--todo qui c'è da vedere che l'id username fa comparire la popup, cambiandolo in teamname non funziona più -->
 
             <center><h3 class="title">
@@ -159,6 +159,7 @@
 
 
   </div>
+    {{/with }}
 </template>
 
 

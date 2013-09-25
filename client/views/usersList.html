@@ -67,9 +67,19 @@
                 <fieldset style="border: solid 1px #ddd ! important; padding: 1.25em ! important;">
                     <h3>{{name}}</h3>
                     <ul class="padded separate-sections">
-                        {{#each users}}
-                        <li><img class="menu-avatar" src="{{profile.picture}}">
-                            <a href="/user/{{_id}}">{{profile.name}}</a> [ <a href="#ban">Ban!</a> | <a href="#ban">Delete!</a> ]
+                        {{#each team}}
+                        <li>
+                            <fieldset style="border: solid 1px #ddd ! important; padding: 1.25em ! important;">
+                                <img width="100px" src="{{picture}}" alt="logo"/>
+                                <h3>{{name}}</h3>
+                                {{#each users}}
+                                <ul class="padded separate-sections">
+                                    <li><img class="menu-avatar" src="{{profile.picture}}">
+                                        <a href="/user/{{_id}}">{{profile.name}}</a>
+                                    </li>
+                                </ul>
+                                {{/each}}
+                            </fieldset>
                         </li>
                         {{/each}}
                     </ul>

@@ -91,7 +91,12 @@
 
                         <li>
                             <label><strong>TEAMS</strong></label>
-                            <label style="left: 5%;position: relative;">[TODO] - Qui andranno i team di appartenenza, mostrati come elenco di link alla pagina del team</label>
+                            {{#each teamList}}
+                            <li style="padding-left: 5%;">
+                                <img class="menu-avatar" src="{{team.picture}}"/>
+                                <a href="/{{product}}/team/{{team.slug}}"> {{team.name}}</a>
+                            </li>
+                            {{/each}}
                         </li>
                 </ul>
             </div>

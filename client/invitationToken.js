@@ -51,16 +51,22 @@ Template.joinTeam.events({
         try {
 
             // l'utente viene inserito all'interno di un prodotto
-            var elementProduct = Products.find({slug: currentProduct}).fetch()[0];
-            var productId = elementProduct._id;
-            var arrayAllowedUsers = elementProduct.allowedusers;
-            var index = $.inArray(Meteor.userId(), arrayAllowedUsers);
+            var product = Products.findOne({slug: currentProduct});
+            if (product){
+                var productId = product._id;
+                var teamArray = product.team;
+                for (var i=0; i < teamArray.length; i++){
+                    if (teamArray[i].slug == currentTeam) {
+                        var index = $.inArray(Meteor.userId(), teamArray[i].members);
+                        if (index == -1) {
+                            // se il cliente non è contenuto nel prodotto e team corrente, lo aggiungo
+                            teamArray[i].members.push(Meteor.userId());
+                            Products.update( {_id: productId} , {$set:{team: teamArray}} );
 
-            if (index == -1) {
-                // se il cliente non è contenuto nel prodotto corrente, lo aggiungo
-                arrayAllowedUsers.push(Meteor.userId());
-                Products.update( {_id: productId} , {$set:{allowedusers: arrayAllowedUsers}} );
-
+                        }
+                        break;
+                    }
+                }
             }
 
             var token = getToken();

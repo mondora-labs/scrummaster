@@ -8,7 +8,9 @@ Template.dailyscrum.rendered = function() {
         defaultDate: d,
         dateFormat: 'dd-mm-yy'
     });
+
+    $(function() {
+        $( ".draggable_yesterday" ).draggable({ containment: ".yesterday", scroll: false });
+        $( ".draggable_today" ).draggable({ containment: ".today", scroll: false });
+    });
 }
-                             
-
-

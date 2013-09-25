@@ -1,23 +1,17 @@
   
 == Products
-{          
-   name: "Matutor Bis",
-   slug: "matutorbis",
-   allowedusers: [ "KcJ4i6BiErdRaqjBqa", "kKcJ4i6BiErdRaqjBa"
-   ],
-   scrummaster: [ Meteor.userId() ],
-   productowner: ["a productowner"],
-   team: ["KcJ4i6BiErdRaqjBqa", "KcJ4i6BiErdRaqjBqb", "KcJ4i6BiErdRaqjBqc"]
-
-}
-
-Products.insert( { name: "Matutor Bis",
-                      slug: "matutorbis",
-                      allowedusers: [ "KcJ4i6BiErdRaqjBqa", "kKcJ4i6BiErdRaqjBa"
-                      ],
-                      scrummaster: [ Meteor.userId() ],
-                      productowner: ["a productowner"],
-                      team: ["KcJ4i6BiErdRaqjBqa", "KcJ4i6BiErdRaqjBqb", "KcJ4i6BiErdRaqjBqc"] });
+Products.insert( {
+                    name: "Matutor Bis",
+                    slug: "matutorbis",
+                    chickens: [ ],
+                    scrummaster: [ Meteor.userId() ],
+                    productowner: [],
+                    team:[{ name: "I Moschettieri",
+                            slug:"moschettieri",
+                            motto: "Tutti per uno, uno per tutti.",
+                            picture: "http://3.bp.blogspot.com/-8dPgVxgmoo8/TfYnmUHPF7I/AAAAAAAALng/s2TId6zrK9Y/s1600/4Moschettieri.jpg",
+                            members:  [] }]
+                 });
 
 DailyScrum.insert( {  name: "Daily Scrum", date:d, dailyscrum:{ yesterday: [ {player: "Matteo", task:"Timer del visualizzatore", pair:["jacopo","davide"]} ], today:[], issues:[] }} );
 

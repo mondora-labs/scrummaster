@@ -4,9 +4,9 @@ InvitationToken = new Meteor.Collection('invitationToken');
 
 
 if (Meteor.isServer) {
-  //Publish all the Products for the logged-in user
+  //TODO Publish all the Products for the logged-in user, filter on user-role
   Meteor.publish("Products", function () {
-    return Products.find ( {scrummaster: this.userId })
+    return Products.find ( /*{scrummaster: this.userId }*/)
 //return Products.find ();  
   });
 
