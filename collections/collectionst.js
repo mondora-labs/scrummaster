@@ -1,13 +1,19 @@
 Products = new Meteor.Collection('Products');    
 DailyScrum = new Meteor.Collection('dailyscrum');
 InvitationToken = new Meteor.Collection('invitationToken');
+FriendsList = new Meteor.Collection('friendsList');
 
 
 if (Meteor.isServer) {
-  //TODO Publish all the Products for the logged-in user, filter on user-role
+  //TODO Publish all the Products with scrum-master, product-owner or team member = logged-in user
   Meteor.publish("Products", function () {
-    return Products.find ( /*{scrummaster: this.userId }*/)
-//return Products.find ();  
+  /*  return Products.find ({ $or: [
+          {scrummaster: this.userId},
+          {productowner: this.userId},
+          // team member
+      ]}
+      ); */
+    return Products.find ();
   });
 
   Meteor.publish("dailyscrum", function () {
@@ -18,5 +24,9 @@ if (Meteor.isServer) {
 
   Meteor.publish("invitationToken", function () {
     return InvitationToken.find ();
+  });
+
+  Meteor.publish( "friendsList", function() {
+    return Meteor.users.find();
   });
 }

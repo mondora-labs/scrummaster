@@ -96,10 +96,16 @@
               <ul class="padded separate-sections">
 
                 <li class="input">
-                  <input type="text" placeholder="Email" id="invitationMail"/>
+                    <input type="text" placeholder="Email" id="invitationMail"/>
                 </li>
 
-
+                <li>
+                    <select id="invitationRole" class="easyui-combobox" name="dept" style="width:200px;">
+                        <option value="tm" selected="true">Team Member</option>
+                        <option value="sm" >Scrum Master</option>
+                        <option value="po" >Product Owner</option>
+                    </select>
+                </li>
               </ul>
             </div>
 
@@ -113,7 +119,7 @@
           </div>
           <div class="form-actions">
             <button type="submit" class="btn btn-blue sendMail">Update and invite</button>
-            <button type="button" class="btn btn-default">Cancel</button>
+   <!--         <button type="button" class="btn btn-default">Cancel</button>    -->
           </div>
         </form>
 
@@ -173,9 +179,28 @@
         davide.morri@mondora.com (invited) [ <a href="#inviteagain">Invite Again</a> | <a href="#ban">Delete!</a> ]
     </li>
     -->
+    {{#with scrummaster}}
+    {{#if scrummaster}}
+        <li><img class="menu-avatar" src="{{profile.picture}}">
+            <a href="/user/{{_id}}"> {{profile.name}} (Scrum Master)</a>
+            <button type="button" class="btn btn-blue" id="deleteSM" style="float:right">Delete</button>
+        </li>
+    {{/if}}
+    {{/with}}
+
+    {{#with productowner}}
+    {{#if productowner}}
+        <li><img class="menu-avatar" src="{{profile.picture}}">
+            <a href="/user/{{_id}}"> {{profile.name}} (Product Owner)</a>
+            <button type="button" class="btn btn-blue" id="deletePO" style="float:right">Delete</button>
+        </li>
+    {{/if}}
+    {{/with}}
+
     {{#each users}}
         <li><img class="menu-avatar" src="{{picture}}">
-            <a href="/user/{{id}}"> {{name}}</a> [ <a href="#ban">Ban!</a> | <a href="#ban">Delete!</a> ]
+            <a href="/user/{{id}}"> {{name}}</a>
+            <button type="button" class="btn btn-blue deleteTM" style="float:right" value="{{id}}">Delete</button>
         </li>
     {{/each}}
 </template>

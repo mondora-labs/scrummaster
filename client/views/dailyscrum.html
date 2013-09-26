@@ -1,5 +1,5 @@
 <template name="dailyscrum">
-
+    {{#with teamInfo}}
 
     <div class="container-fluid">
         <div class="row-fluid">
@@ -57,10 +57,11 @@
         </div>
     </div>
 
+
     <div class="container-fluid padded">
         <div class="row-fluid">
             <div>
-                <h3 style="text-align: center;">TEAM Moschettieri</h3>
+                <h3 style="text-align: center;">TEAM "{{name}}"</h3>
 
                 <div id="divTeamList">
                     <p style="width:10%; display: inline-block; float:left;">
@@ -69,43 +70,37 @@
                     </p>
 
                     <ul class="padded separate-sections" style="display: inline-block; width:80%" id="teamlist">
-                        <li class="selected">
-                            <label>Gianluca Genga</label>
-                            <a href="#">
-                                <img style="width: 70px;" src="https://lh5.googleusercontent.com/-rxK1amjBYdo/AAAAAAAAAAI/AAAAAAAAAAA/JXH2ABQOME8/photo.jpg" alt="logo"/>
-                            </a>
+
+                        {{#each teamUserInfo }}
+                        <li id="{{_id}}" class="user">
+                            <label>{{profile.name}}</label>
+                            <img style="width: 70px;" src="{{profile.picture}}" alt="logo"/>
                         </li>
-                        <li>
+                        {{/each}}
+               <!--     <li>
                             <label>Francesco Mondora</label>
                             <a href="#">
                                 <img style="width: 70px;" src="https://lh4.googleusercontent.com/-2L5LK_vIIuQ/AAAAAAAAAAI/AAAAAAAAAjk/nymGrgsgg7I/photo.jpg" alt="logo"/>
                             </a>
-                        </li>
-                        <li>
-                            <label>Utente 2</label>
-                            <img style="width: 70px;" src="../images/avatars/avatar2.jpg" alt="logo"/>
-                        </li>
-                        <li>
-                            <label>Utente 3</label>
-                            <img style="width: 70px;" src="../images/avatars/avatar3.jpg" alt="logo"/>
-                        </li>
+                        </li>     -->
+
                     </ul>
                 </div>
             </div>
         </div>
     </div>
 
-    <hr width="100%" color="#000000" noshade="false"/>
+    <hr width="100%" color="#000000" noshade="false" class="yesterdayPanel"/>
 
-    <div class="container-fluid padded">
+    <div class="container-fluid padded yesterdayPanel">
         <div class="row-fluid">
             <h5>Yesterday</h5>
 
                 <div class="scrumElement yesterday" style="left: 3%">
                     <label align="center"><strong>PAIR</strong></label>
-                    <img class="draggable draggable_yesterday" src="https://lh5.googleusercontent.com/-rxK1amjBYdo/AAAAAAAAAAI/AAAAAAAAAAA/JXH2ABQOME8/photo.jpg" alt="logo"/>
-                    <br/>
-                    <img class="draggable draggable_yesterday" src="https://lh4.googleusercontent.com/-2L5LK_vIIuQ/AAAAAAAAAAI/AAAAAAAAAjk/nymGrgsgg7I/photo.jpg" alt="logo"/>
+                    {{#each teamUserInfo }}
+                    <img class="draggable draggable_yesterday" src="{{profile.picture}}" alt="logo"/>
+                    {{/ each}}
                 </div>
                 <div class="scrumElement" style="left: 6%">
                     <label align="center">
@@ -125,17 +120,17 @@
         </div>
     </div>
 
-    <hr width="100%" color="#000000" noshade="false"/>
+    <hr width="100%" color="#000000" noshade="false" class="todayPanel"/>
 
-    <div class="container-fluid padded">
+    <div class="container-fluid padded todayPanel">
         <div class="row-fluid">
             <h5>Today</h5>
 
             <div class="scrumElement today" style="left: 3%">
                 <label align="center"><strong>PAIR</strong></label>
-                <img class="draggable draggable_today" src="https://lh5.googleusercontent.com/-rxK1amjBYdo/AAAAAAAAAAI/AAAAAAAAAAA/JXH2ABQOME8/photo.jpg" alt="logo"/>
-                <br/>
-                <img class="draggable draggable_today" src="https://lh4.googleusercontent.com/-2L5LK_vIIuQ/AAAAAAAAAAI/AAAAAAAAAjk/nymGrgsgg7I/photo.jpg" alt="logo"/>
+                {{#each teamUserInfo }}
+                <img class="draggable draggable_today" src="{{profile.picture}}" alt="logo"/>
+                {{/each}}
             </div>
             <div class="scrumElement" style="left: 6%">
                 <label align="center">
@@ -155,9 +150,11 @@
         </div>
     </div>
 
-    <div class="form-actions">
+    <div class="form-actions buttonsPanel">
         <button type="submit" class="btn btn-blue sendMail">Save</button>
         <button type="button" class="btn btn-default">Cancel</button>
     </div>
+
+    {{/with }}
 
 </template>

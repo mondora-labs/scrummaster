@@ -28,10 +28,14 @@ function selectedTokenAndLogin(){
 
 function getToken () {
     // return InvitationToken.find(); // tutti i token
-    var tokenString = this.location.href.substring(this.location.href.indexOf('?')+1);
+    var tokenString = this.location.href.substring(this.location.href.indexOf('tk=')+3);
     var token =  InvitationToken.findOne( {token: tokenString}); // solo il token corrente
 
     return token;
+}
+
+function getRole () {
+    return this.location.href.substring(this.location.href.indexOf('param=')+6,this.location.href.indexOf('tk=')-1);
 }
 
 Template.joinTeam.helpers({
@@ -47,13 +51,23 @@ Template.joinTeam.events({
 
         var currentTeam = Session.get('currentTeam');
         var currentProduct = Session.get('currentProduct');
-
+        var role = getRole();
         try {
 
             // l'utente viene inserito all'interno di un prodotto
             var product = Products.findOne({slug: currentProduct});
             if (product){
-                var productId = product._id;
+            var productId = product._id;
+
+            // se il role è scrum-master (sm) o product-owner(po) lo aggiungo come tale
+            if (role == 'sm')
+                Products.update( {_id: productId} , {$set:{scrummaster: Meteor.userId()}} );
+
+            else if (role == 'po')
+                Products.update( {_id: productId} , {$set:{productowner: Meteor.userId()}} );
+
+            else {
+                //altrimenti lo aggiungo come team member
                 var teamArray = product.team;
                 for (var i=0; i < teamArray.length; i++){
                     if (teamArray[i].slug == currentTeam) {
@@ -68,6 +82,7 @@ Template.joinTeam.events({
                     }
                 }
             }
+        }
 
             var token = getToken();
             // todo commentato per debug, è da decommentare

@@ -15,12 +15,16 @@ function getUserTeamList() {
     if (products){
         for (var i=0; i<products.length; i++){
             for (var j=0; j<products[i].team.length; j++){
-                var index = $.inArray(Meteor.userId(), products[i].team[j].members);
-                if (index != -1)
+                var index = $.inArray(Session.get('userId'), products[i].team[j].members);
+                if ( index != -1 ||
+                     products[i].scrummaster == Session.get('userId') ||
+                     products[i].scrummaster == Session.get('userId')
+                    ) {
                     teamList.push({
                         product: products[i].slug,
                         team: products[i].team[j]
                     });
+                }
             }
         }
     }

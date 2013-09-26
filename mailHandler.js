@@ -12,11 +12,12 @@ if (Meteor.isClient) {
             var mailTo = $('#invitationMail').val();
             var current_team = Session.get('currentTeam');
             var current_product = Session.get('currentProduct');
+            var role = $('#invitationRole').val();
 
             console.log("@@@ current team: "+current_team );
             console.log("@@@ current product: "+current_product );
 
-            Meteor.call('sendInvitation', mailTo, msg, current_team, current_product, function (error, result) {
+            Meteor.call('sendInvitation', mailTo, msg, role, current_team, current_product, function (error, result) {
 
                 if (error) {
                     //notify that there's a problem
@@ -47,7 +48,7 @@ if (Meteor.isClient) {
 }
 
 
-var sendInvitation = function ( mailFrom, mailTo, msg, current_team, current_product) {
+var sendInvitation = function ( mailFrom, mailTo, msg, role, current_team, current_product) {
 
     // generazione token
     var result = {};
@@ -68,7 +69,7 @@ var sendInvitation = function ( mailFrom, mailTo, msg, current_team, current_pro
 
     InvitationToken.insert({token: result.token, product: current_product, team: current_team, date: timestamp});
 
-    var link = Meteor.absoluteUrl() + current_product + "/joinTeam/" + current_team + "?" + result.token;
+    var link = Meteor.absoluteUrl() + current_product + "/joinTeam/" + current_team + "?" + "param="+role+ "&tk="+ result.token;
 
 
     var current_user = Meteor.users.findOne(  Meteor.userId() );
@@ -89,11 +90,11 @@ var sendInvitation = function ( mailFrom, mailTo, msg, current_team, current_pro
     });
 }
 Meteor.methods({
-    'sendInvitation': function (mailTo, msg, current_team, current_product) {
+    'sendInvitation': function (mailTo, msg, role, current_team, current_product) {
         if (Meteor.isServer)
         // al posto di  "postmaster@scrummaster.com", si potrebbe pensare di prendere la mail dell'utente loggato
         // Meteor.users.findOne(Meteor.userId).profile.email
-            sendInvitation("postmaster@scrummaster.com", mailTo, msg, current_team, current_product);
+            sendInvitation("postmaster@scrummaster.com", mailTo, msg, role,  current_team, current_product);
     }
 });
 

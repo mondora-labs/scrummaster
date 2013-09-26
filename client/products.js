@@ -14,6 +14,8 @@ function selectedTeam() {
     }
 }
 
+
+
 function filterUserTeam(){
 
     var userData = new Array();
@@ -52,6 +54,77 @@ Template.team.helpers({
 Template.userTeam.helpers ({
     users: function() {
         return filterUserTeam() ;
+    },
+
+    scrummaster : function() {
+        var scrummaster = selectedProduct().scrummaster;
+        if (scrummaster)
+            return Meteor.users.findOne(selectedProduct().scrummaster);
+
+    },
+
+    productowner : function() {
+        var productowner = selectedProduct().productowner;
+        if (productowner)
+            return Meteor.users.findOne(selectedProduct().productowner);
+
     }
 });
+
+
+Template.userTeam.events({
+    'click #deleteSM': function (event, template) {
+        Products.update( {_id: selectedProduct()._id} , {$set:{scrummaster: ""}} );
+        return false;
+    },
+
+    'click #deletePO': function (event, template) {
+        Products.update( {_id: selectedProduct()._id} , {$set:{productowner: ""}} );
+        return false;
+    },
+
+    'click .deleteTM': function (event, template) {
+        var userId = $(event.target).val();
+        alert(userId);
+
+        var product = selectedProduct();
+        var teamArray = product.team;
+
+        for (var i=0; i< teamArray.length; i++){
+            if (teamArray[i].slug == Session.get('currentTeam')){
+                var index = ($.inArray(userId, teamArray[i].members));
+                if (index != -1)
+                    // rimuovo l'utente dalla lista dei membri
+                    teamArray[i].members.splice(index, 1);
+
+
+                break;
+            }
+        }
+
+        Products.update( {_id: product._id} , {$set:{team: teamArray}} );
+
+        return false;
+    }
+});
+
+
+Template.dailyscrum.helpers({
+    teamInfo: function() {
+        var team = selectedTeam();
+            if (team) {
+            team.teamUserInfo = new Array();
+
+            for (var i=0; i<team.members.length; i++){
+                var currentUser = Meteor.users.findOne(team.members[i]);
+                if (currentUser)
+                    team.teamUserInfo.push(currentUser);
+            }
+        }
+        return team;
+    }
+});
+
+
+
 
