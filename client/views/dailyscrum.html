@@ -98,7 +98,7 @@
 
                 <div class="scrumElement yesterday" style="left: 3%">
                     <label align="center"><strong>PAIR</strong></label>
-                    {{#each teamUserInfo }}
+                    {{#each teamPairInfo }}
                     <img class="draggable draggable_yesterday" src="{{profile.picture}}" alt="logo"/>
                     {{/ each}}
                 </div>
@@ -110,7 +110,7 @@
                     <br/>
                     <input value="Task2" disabled="true"/>
                 </div>
-                <div class="scrumElement" style="left: 9%">
+                <div class="scrumElement" style="left: 9%;height: auto;">
                     <label align="center">
                         <strong>ISSUES</strong>
                     </label>
@@ -126,21 +126,31 @@
         <div class="row-fluid">
             <h5>Today</h5>
 
-            <div class="scrumElement today" style="left: 3%">
-                <label align="center"><strong>PAIR</strong></label>
-                {{#each teamUserInfo }}
-                <img class="draggable draggable_today" src="{{profile.picture}}" alt="logo"/>
+            <div style="left:3%; padding-left:0;min-height: 200px;" class="scrumElement" id="containmentDiv">
+
+                <div id="snaptarget" class="today ui-widget-header" style="height: 60%;">
+                    <label align="center"><strong>PAIR</strong></label>
+                </div>
+                {{#each teamPairInfo }}
+                <div class="draggable">
+                    <img class=" draggable_today ui-widget-content" src="{{profile.picture}}" alt="logo"/>
+                </div>
                 {{/each}}
+
             </div>
-            <div class="scrumElement" style="left: 6%">
+            <div class="scrumElement" style="left: 6%; height:auto;min-height: 200px;">
                 <label align="center">
                     <strong>TASKS</strong>
                 </label>
-                <input value="Today Task3"/>
+             <!--   <input value="Today Task3"/>
                 <br/>
-                <input value="Today Task4"/>
+                <input value="Today Task4"/>    -->
+                <div id="divInputText">
+
+                </div>
+                <button class="addTextboxButton btn btn-blue" type="button">Add Task</button>
             </div>
-            <div class="scrumElement" style="left: 9%">
+            <div class="scrumElement" style="left: 9%; height: auto;min-height: 200px;">
                 <label align="center">
                     <strong>ISSUES</strong>
                 </label>

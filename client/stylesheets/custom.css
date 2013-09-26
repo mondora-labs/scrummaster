@@ -74,6 +74,24 @@
     margin: 10px;
 }
 
+.draggable  {
+    width: 50px;
+    float:left;
+    margin: 10px;
+}
+
 .scrumElement input {
     margin-bottom:5%;
+}
+
+.removeBtn {
+    margin-bottom: 5%;
+}
+
+#divInputText input{
+    color:#858585;
+}
+
+.addTextboxButton {
+    margin-bottom: 10px;
 }

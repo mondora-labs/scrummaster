@@ -13,7 +13,18 @@ Products.insert( {
                             members:  [] }]
                  });
 
-DailyScrum.insert( {  name: "Daily Scrum", date:d, dailyscrum:{ yesterday: [ {player: "Matteo", task:"Timer del visualizzatore", pair:["jacopo","davide"]} ], today:[], issues:[] }} );
+DailyScrum.insert( {
+                    name: "Daily Scrum",
+                    date:d,
+                    dailyscrum:{
+                        yesterday: [ {
+                                        player: "Matteo",
+                                        task:"Timer del visualizzatore",
+                                        pair:["jacopo","davide"]
+                                      } ],
+                        today:[],
+                        issues:[] }
+                   } );
 
 == What I am Learning 
 Products.update( {_id: "Ybhp3fCfcWtDrdryj"} , {$set:{name: 'Zanichelli Matutor Bis'}} );

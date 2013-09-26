@@ -1,6 +1,9 @@
 Meteor.subscribe('dailyscrum');
 
+var tasksinputText = 0;
+
 Template.dailyscrum.rendered = function() {
+
     var d = new Date();
     $( "#datepicker" ).datepicker({
         changeMonth: true,
@@ -12,8 +15,32 @@ Template.dailyscrum.rendered = function() {
     $( "#datepicker" ).datepicker( "setDate", d );
 
     $(function() {
-        $( ".draggable_yesterday" ).draggable({ containment: ".yesterday", scroll: false });
-        $( ".draggable_today" ).draggable({ containment: ".today", scroll: false });
+   //     $( ".draggable_yesterday" ).draggable({ containment: ".yesterday", scroll: false });
+        $( ".draggable_today" ).draggable({
+            snap: true,
+            grid: [ 50, 100 ],
+            containment: "#containmentDiv",
+            start: function(event, ui) {
+
+            },
+            stop: function(event, ui) {
+                // uso la coordinata Y per capire se l'oggetto è stato draggato nel container
+
+                // startY > finalY : oggetto spostato in su, quindi inserito
+                // startY < finalY : oggetto spostato in giù, quindi tolto
+                // startY = finalY : oggetto non è stato spostato verticalmente
+                var startY = ui.originalPosition.top;
+                var finalY = ui.position.top;
+
+                // aggiungo/sottraggo 50 per evitare di considerare i piccoli spostamenti dell'immagine
+                if (startY > (finalY+50))
+                    alert('oggetto in su.. verrà aggiunto')
+                else if (startY < (finalY-50))
+                    alert('oggetto in giù.. verrà tolto');
+
+            }
+        /*{ snap: ".ui-widget-header" }*/ /*{containment: ".today", scroll: false }*/
+        });
     });
 
     $('.yesterdayPanel').hide();
@@ -37,17 +64,18 @@ Template.dailyscrum.events({
 
     'click .user': function (event, template) {
 
-        $('.selected').removeClass('selected');
         var selectedUserId;
+        $('.selected').removeClass('selected');
 
         if(event.target.parentElement.id == 'teamlist') {
-            $(event.target).addClass('selected');
             selectedUserId = event.target.id;
+            $(event.target).addClass('selected');
         }
         else  {
-            $(event.target.parentElement).addClass('selected');
             selectedUserId = event.target.parentElement.id;
+            $(event.target.parentElement).addClass('selected');
         }
+
 
         // format Date : Thu Sep 26 2013 00:00:00 GMT+0200 (CEST)
         // se si usa questo la condizione if sotto deve essere "if (!selectedDate)"
@@ -60,12 +88,26 @@ Template.dailyscrum.events({
             alert ("Please select a date to load daily scrum...")
         }
         else {
-            alert ("[ " + selectedDate + " ] loading daily scrum for user "+selectedUserId);
-
             $('.yesterdayPanel').show();
             $('.todayPanel').show();
             $('.buttonsPanel').show();
         }
+
+        Session.set('dailyScrumUserId', selectedUserId);
+        return false;
+    },
+
+    'click .addTextboxButton': function (event, template) {
+
+        $('#divInputText').append( "<input id='tasksInput_"+tasksinputText+"' value='Some Text..."+tasksinputText+"'/> <button class='removeBtn btn btn-default' id='"+tasksinputText+"'>Remove</button>" );
+        tasksinputText++;
+        return false;
+    },
+
+    'click .removeBtn': function (event, template) {
+        var idToRemove = event.target.id;
+        $('#tasksInput_'+idToRemove).remove();
+        $('#'+idToRemove).remove();
         return false;
     }
 });

@@ -122,6 +122,23 @@ Template.dailyscrum.helpers({
             }
         }
         return team;
+    },
+
+    teamPairInfo: function() {
+        var pairArray = new Array();
+        var team = selectedTeam();
+        if (team) {
+            for (var i=0; i<team.members.length; i++){
+
+                    if (team.members[i] != Session.get('dailyScrumUserId')) {
+                        var currentUser = Meteor.users.findOne(team.members[i]);
+                        if (currentUser)
+                            pairArray.push(currentUser);
+                    }
+
+            }
+        }
+        return pairArray;
     }
 });
 
