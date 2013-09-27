@@ -37,7 +37,6 @@
 
 #divTeamList {
     width: 100%;
-    overflow: hidden;
 }
 
 #teamlist {
@@ -47,7 +46,7 @@
     display: block;
     border: solid 1px #ddd ! important; padding: 1.25em ! important;
     left: 5%;
-    /*left: 50%;*/
+    width:90%;
 }
 
 #teamlist li {
@@ -60,38 +59,122 @@
     border:solid 3px #00A ! important;
 }
 
-.scrumElement {
-    float:left;
-    width:30%;
-    border: solid 1px #ddd ! important;
-    padding-left: 3%;
-    position: relative;
-    height: 167px;
-}
-
-.scrumElement img {
-    width: 50px;
-    margin: 10px;
-}
-
 .draggable  {
     width: 50px;
     float:left;
     margin: 10px;
 }
 
-.scrumElement input {
-    margin-bottom:5%;
+.draggable_img {
+    width: 70px;
 }
 
-.removeBtn {
-    margin-bottom: 5%;
+#toolTip {
+    position:relative;
 }
 
-#divInputText input{
-    color:#858585;
+#toolTip textarea {
+    padding:10px;
+    background-color:#f9f9f9;
+    border:solid 1px #a0c7ff;
+    -moz-border-radius:5px;-ie-border-radius:5px;-webkit-border-radius:5px;-o-border-radius:5px;border-radius:5px;
 }
 
-.addTextboxButton {
-    margin-bottom: 10px;
+.tailShadow {
+    position:absolute;
+    bottom:2px;
+    left:28px;
+    width:0;height:0;
+    border:solid 2px #fff;
+    box-shadow:0 0 10px 1px #555;
 }
+
+.tail1 {
+    position:absolute;
+    bottom:-9px;
+    left:20px;
+    width:0;height:0;
+    border-color:#a0c7ff transparent transparent transparent;
+    border-width:10px;
+    border-style:solid;
+}
+
+.tail2 {
+    position:absolute;
+    bottom:-8px;
+    left:20px;
+    width:0;height:0;
+    border-color:#f9f9f9 transparent transparent transparent;
+    border-width:10px;
+    border-style:solid;
+}
+
+.UFIRow {
+    background-color: #edeff4;
+    margin-top: 1px;
+    padding: 4px;
+    word-wrap: break-word;
+    display: list-item;
+    text-align: -webkit-match-parent;
+    list-style-type: none;
+}
+.lfloat {
+    float: left;
+}
+.rfloat {
+    float: right;
+}
+.UFIRow .UFIImageBlockImage {
+    margin: 0;
+    color: #3b5998;
+    cursor: pointer;
+    text-decoration: none;
+}
+.UFIActorImage {
+    width:50px;
+}
+
+.UFIRow .UFIImageBlockContent {
+    margin: 0;
+    padding: 0 0 0 8px;
+    overflow: hidden;
+}
+.clearfix {
+    zoom: 1;
+}
+.UFIRow .UFICommentCloseButton {
+    display: block;
+    opacity: 0;
+    position: relative;
+    z-index: 1;
+}
+.uiCloseButton {
+    background-image: url(../images/deleteButtons.png);
+    background-repeat: no-repeat;
+    height: 15px;
+    width: 15px;
+    cursor: pointer;
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+    zoom: 1;
+}
+
+#dailyScrumPanel {
+    display: block;
+    position: relative;
+    width: 95%;
+    left: 2%;
+}
+}
+
+.addTask {
+    margin-top: 3%;
+}
+
+/*#fancyClock{
+    margin:40px auto;
+    height:200px;
+    border:1px solid #111111;
+    width:600px;
+} */

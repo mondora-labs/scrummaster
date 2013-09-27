@@ -1,113 +1,142 @@
 Meteor.subscribe('dailyscrum');
 
-var tasksinputText = 0;
+var tmpDudePicture = "https://lh4.googleusercontent.com/-77wocJdaiXg/AAAAAAAAAAI/AAAAAAAAAAA/NN3q52w3EXQ/s48-c/photo.jpg";
+var tmpDudeUserId = "";
+
+function resetTodayPair() {
+
+    Session.set('tmpDudePicture',tmpDudePicture);
+    Session.set('tmpDudeUserId',tmpDudeUserId);
+
+}
 
 Template.dailyscrum.rendered = function() {
 
-    var d = new Date();
-    $( "#datepicker" ).datepicker({
-        changeMonth: true,
-        changeYear: true,
-        defaultDate: d,
-        dateFormat: 'dd-mm-yy'
-    });
-
-    $( "#datepicker" ).datepicker( "setDate", d );
+    if (Session.get('tmpDudePicture') == null)
+        resetTodayPair();
 
     $(function() {
-   //     $( ".draggable_yesterday" ).draggable({ containment: ".yesterday", scroll: false });
-        $( ".draggable_today" ).draggable({
-            snap: true,
-            grid: [ 50, 100 ],
-            containment: "#containmentDiv",
-            start: function(event, ui) {
+        $( ".draggable_img" ).draggable({
+            scroll: false,
+            stack: "div",
+            revert: true,
+            containment: "#todayPair"
+      //      stack: "div"
+      //      grid: [ 50, 100 ],
+      //      containment: "#containmentDiv",
+      /*      start: function(event, ui) {
 
-            },
+            }*/,
             stop: function(event, ui) {
-                // uso la coordinata Y per capire se l'oggetto è stato draggato nel container
+                if (ui.helper != null && ui.helper.length > 0) {
+                    pairMate = ui.helper[0];
+                    userid = $(ui.helper).attr('userid');
 
-                // startY > finalY : oggetto spostato in su, quindi inserito
-                // startY < finalY : oggetto spostato in giù, quindi tolto
-                // startY = finalY : oggetto non è stato spostato verticalmente
-                var startY = ui.originalPosition.top;
-                var finalY = ui.position.top;
+                    if (userid != Meteor.userId()) {
+                        Session.set('tmpDudePicture',pairMate.src);
+                        Session.set('tmpDudeUserId',userid);
 
-                // aggiungo/sottraggo 50 per evitare di considerare i piccoli spostamenti dell'immagine
-                if (startY > (finalY+50))
-                    alert('oggetto in su.. verrà aggiunto')
-                else if (startY < (finalY-50))
-                    alert('oggetto in giù.. verrà tolto');
-
+                    }
+                }
             }
-        /*{ snap: ".ui-widget-header" }*/ /*{containment: ".today", scroll: false }*/
         });
     });
 
-    $('.yesterdayPanel').hide();
-    $('.todayPanel').hide();
-    $('.buttonsPanel').hide();
+
+    if (Session.get('dailyScrumUserId'))
+        $('#dailyScrumPanel').show();
+    else
+        $('#dailyScrumPanel').hide();
 
 }
 
 Template.dailyscrum.events({
-
-    'change #datepicker': function (event, template) {
-
-        // se cancello la data, obbligo utente a re-inserirla per vedere la pagina
-        if ($(event.target).val() == '' ) {
-            $('.selected').removeClass('selected');
-            $('.yesterdayPanel').hide();
-            $('.todayPanel').hide();
-            $('.buttonsPanel').hide();
-        }
-    },
 
     'click .user': function (event, template) {
 
         var selectedUserId;
         $('.selected').removeClass('selected');
 
-        if(event.target.parentElement.id == 'teamlist') {
-            selectedUserId = event.target.id;
-            $(event.target).addClass('selected');
-        }
-        else  {
+        if (event.target.parentElement.id == 'teamlist'){
             selectedUserId = event.target.parentElement.id;
             $(event.target.parentElement).addClass('selected');
         }
-
-
-        // format Date : Thu Sep 26 2013 00:00:00 GMT+0200 (CEST)
-        // se si usa questo la condizione if sotto deve essere "if (!selectedDate)"
-        //var selectedDate = $( "#datepicker" ).datepicker( "getDate");
-
-        // format Date : 26-09-2013
-        var selectedDate = $( "#datepicker" ).val();
-
-        if (selectedDate == '') {
-            alert ("Please select a date to load daily scrum...")
-        }
         else {
-            $('.yesterdayPanel').show();
-            $('.todayPanel').show();
-            $('.buttonsPanel').show();
+            selectedUserId = event.target.parentElement.parentElement.id;
+            $(event.target.parentElement.parentElement).addClass('selected');
         }
 
         Session.set('dailyScrumUserId', selectedUserId);
+
+        $('#dailyScrumPanel').show();
+
+     //   $('#fancyClock').tzineClock();
+
         return false;
     },
 
-    'click .addTextboxButton': function (event, template) {
+    'click .addTask': function (event, template) {
 
-        $('#divInputText').append( "<input id='tasksInput_"+tasksinputText+"' value='Some Text..."+tasksinputText+"'/> <button class='removeBtn btn btn-default' id='"+tasksinputText+"'>Remove</button>" );
-        tasksinputText++;
+        event.preventDefault();
+        var newTask= {};
+        newTask.description = $(".newTaskArea").val();
+        newTask.pair = ["bEXEw4wKvFF2BFGGB"];
+
+        var dailyScrumToUpdate = DailyScrum.findOne({
+            $and: [
+                {product_slug: Session.get('currentProduct')},
+                {team_slug: Session.get('currentTeam')},
+                {player: Session.get('dailyScrumUserId')}
+            ]
+        });
+
+        if (dailyScrumToUpdate) {
+            var arrayTasks = dailyScrumToUpdate.tasks;
+            arrayTasks.splice(0,0,newTask);
+            DailyScrum.update( {_id: dailyScrumToUpdate._id} , {$set:{tasks: arrayTasks}} );
+
+        }
+
         return false;
     },
 
-    'click .removeBtn': function (event, template) {
-        var idToRemove = event.target.id;
-        $('#tasksInput_'+idToRemove).remove();
-        $('#'+idToRemove).remove();
+    'focus .newTaskArea': function (event, template) {
+
+        event.target.value = '';
         return false;
     }
+
+});
+
+Template.dailyscrum.helpers ({
+
+    dailyScrum: function() {
+        return DailyScrum.find({
+            $and: [
+                {product_slug: Session.get('currentProduct')},
+                {team_slug: Session.get('currentTeam')},
+                {player: Session.get('dailyScrumUserId')}
+            ]
+        });
+    }
+});
+
+Template.pairdude.helpers ({
+
+    dudepicture: function() {
+        return Session.get('tmpDudePicture');
+    }
+    ,
+    userid : function() {
+        return Session.get('tmpDudeUserId');
+    }
+});
+
+Template.dailyscrum.events({
+
+    'click .removePair': function (event, template) {
+        resetTodayPair();
+        return false;
+    }
+
 });

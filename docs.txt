@@ -13,17 +13,29 @@ Products.insert( {
                             members:  [] }]
                  });
 
+//DailyScrum.insert( {
+//                    name: "Daily Scrum",
+//                    date:d,
+//                    dailyscrum:{
+//                        yesterday: [ {
+//                                        player: "Matteo",
+//                                        task:"Timer del visualizzatore",
+//                                        pair:["jacopo","davide"]
+//                                      } ],
+//                        today:[],
+//                        issues:[] }
+//                   } );
+
 DailyScrum.insert( {
-                    name: "Daily Scrum",
-                    date:d,
-                    dailyscrum:{
-                        yesterday: [ {
-                                        player: "Matteo",
-                                        task:"Timer del visualizzatore",
-                                        pair:["jacopo","davide"]
-                                      } ],
-                        today:[],
-                        issues:[] }
+                    product_slug: "matutorbis",
+                    team_slug: "moschettieri",
+                    date: '27/09/2013',
+                    player: "henXgdno47ERaQCF8",
+                    tasks:[ {
+                              description:"Timer del visualizzatore",
+                              pair:["bEXEw4wKvFF2BFGGB"]
+                            }
+                          ]
                    } );
 
 == What I am Learning 

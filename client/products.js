@@ -122,7 +122,7 @@ Template.dailyscrum.helpers({
             }
         }
         return team;
-    },
+    }/*,
 
     teamPairInfo: function() {
         var pairArray = new Array();
@@ -139,7 +139,7 @@ Template.dailyscrum.helpers({
             }
         }
         return pairArray;
-    }
+    }  */
 });
 
 

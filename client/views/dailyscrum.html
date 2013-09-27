@@ -64,107 +64,107 @@
                 <h3 style="text-align: center;">TEAM "{{name}}"</h3>
 
                 <div id="divTeamList">
-                    <p style="width:10%; display: inline-block; float:left;">
-                        <label>Date:</label>
-                        <input type="text" id="datepicker"/>
-                    </p>
-
-                    <ul class="padded separate-sections" style="display: inline-block; width:80%" id="teamlist">
+                    <ul id="teamlist" class="padded separate-sections">
 
                         {{#each teamUserInfo }}
                         <li id="{{_id}}" class="user">
-                            <label>{{profile.name}}</label>
-                            <img style="width: 70px;" src="{{profile.picture}}" alt="logo"/>
+
+                                <div class="draggable">
+                                    <label>{{profile.name}}</label>
+                                    <img userid="{{_id}}" class="draggable_img ui-widget-content" src="{{profile.picture}}" alt="logo"/>
+                                </div>
+
                         </li>
                         {{/each}}
-               <!--     <li>
-                            <label>Francesco Mondora</label>
-                            <a href="#">
-                                <img style="width: 70px;" src="https://lh4.googleusercontent.com/-2L5LK_vIIuQ/AAAAAAAAAAI/AAAAAAAAAjk/nymGrgsgg7I/photo.jpg" alt="logo"/>
-                            </a>
-                        </li>     -->
 
                     </ul>
+
+                    <br clear="all"/>
+                    <br clear="all"/>
+                    <br clear="all"/>
+                    <br clear="all"/>
+                    <br clear="all"/>
+
+                    <div id="dailyScrumPanel">
+                     <!--   <p>
+                        <div id="fancyClock"></div>
+                        </p>
+                         -->
+                        <br clear="all"/>
+                        {{#each dailyScrum}}
+                            <div class="lfloat">
+                                <h1 style="margin-right:10px">{{date}}</h1>
+                            </div>
+
+                            <div id="todayPair" class="today ui-widget-header" style="width: 100px;height: 90px;float: left;background:none;">
+                                {{> pairdude }}
+                            </div>
+
+                            <div class="rfloat" style="width: 70%;">
+                                <div id="toolTip" style="width: 80%;float: left;">
+                                    <textarea class="newTaskArea" style="width:90%;height:91px">New Task Edit... </textarea>
+                                    <div class="tailShadow"></div>
+                                    <div class="tail1"></div>
+                                    <div class="tail2"></div>
+                                </div>
+
+                                <button class="btn btn-blue addTask">Add Task...</button>
+                                <br clear="all"/>
+
+                                {{#each tasks}}
+                                    <li class="UFIRow">
+                                        <div class="clearfix">
+                                            <div class="lfloat">
+                                                <img src="https://lh6.googleusercontent.com/-WA2d3vrn22Q/AAAAAAAAAAI/AAAAAAAAABM/Tis5LLPRCRk/photo.jpg" class="img UFIActorImage" alt="">
+                                            </div>
+                                            <div>
+                                                <div class="clearfix UFIImageBlockContent">
+                                                    <div class="rfloat">
+                                                        <a href="#" role="button" aria-label="Nascondi" data-hover="tooltip" data-tooltip-alignh="center" class="uiCloseButton UFICommentCloseButton">
+                                                            <img src="../images/deleteButtons.png">
+                                                        </a>
+                                                    </div>
+                                                    <div>
+                                                        <div>
+                                                            <div>
+                                                                <span>
+                                                                    <span>
+                                                                        <span>{{description}}</span>
+                                                                    </span>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                {{/each}}
+                            </div>
+                        {{/each }}
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <hr width="100%" color="#000000" noshade="false" class="yesterdayPanel"/>
+    <hr width="100%" color="#000000" noshade="false"/>
 
-    <div class="container-fluid padded yesterdayPanel">
-        <div class="row-fluid">
-            <h5>Yesterday</h5>
 
-                <div class="scrumElement yesterday" style="left: 3%">
-                    <label align="center"><strong>PAIR</strong></label>
-                    {{#each teamPairInfo }}
-                    <img class="draggable draggable_yesterday" src="{{profile.picture}}" alt="logo"/>
-                    {{/ each}}
-                </div>
-                <div class="scrumElement" style="left: 6%">
-                    <label align="center">
-                        <strong>TASKS</strong>
-                    </label>
-                    <input value="Task1" disabled="true"/>
-                    <br/>
-                    <input value="Task2" disabled="true"/>
-                </div>
-                <div class="scrumElement" style="left: 9%;height: auto;">
-                    <label align="center">
-                        <strong>ISSUES</strong>
-                    </label>
-                    <textarea rows="4" cols="30" disabled="true">Some issues...</textarea>
-                </div>
 
-        </div>
-    </div>
-
-    <hr width="100%" color="#000000" noshade="false" class="todayPanel"/>
-
-    <div class="container-fluid padded todayPanel">
-        <div class="row-fluid">
-            <h5>Today</h5>
-
-            <div style="left:3%; padding-left:0;min-height: 200px;" class="scrumElement" id="containmentDiv">
-
-                <div id="snaptarget" class="today ui-widget-header" style="height: 60%;">
-                    <label align="center"><strong>PAIR</strong></label>
-                </div>
-                {{#each teamPairInfo }}
-                <div class="draggable">
-                    <img class=" draggable_today ui-widget-content" src="{{profile.picture}}" alt="logo"/>
-                </div>
-                {{/each}}
-
-            </div>
-            <div class="scrumElement" style="left: 6%; height:auto;min-height: 200px;">
-                <label align="center">
-                    <strong>TASKS</strong>
-                </label>
-             <!--   <input value="Today Task3"/>
-                <br/>
-                <input value="Today Task4"/>    -->
-                <div id="divInputText">
-
-                </div>
-                <button class="addTextboxButton btn btn-blue" type="button">Add Task</button>
-            </div>
-            <div class="scrumElement" style="left: 9%; height: auto;min-height: 200px;">
-                <label align="center">
-                    <strong>ISSUES</strong>
-                </label>
-                <textarea rows="4" cols="30">Some today issues...</textarea>
-            </div>
-
-        </div>
-    </div>
-
-    <div class="form-actions buttonsPanel">
-        <button type="submit" class="btn btn-blue sendMail">Save</button>
-        <button type="button" class="btn btn-default">Cancel</button>
-    </div>
 
     {{/with }}
 
+</template>
+
+
+<template name="pairdude">
+    <div class="span3" style="width: 100%;">
+        <div class="well relative">
+            <span class="triangle-button red">
+                <i class="icon-minus removePair"></i>
+            </span>
+            <img src="{{dudepicture}}" userid="{{userid}}"/>
+        </div>
+    </div>
 </template>
