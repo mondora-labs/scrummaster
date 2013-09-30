@@ -69,10 +69,10 @@
                         {{#each teamUserInfo }}
                         <li id="{{_id}}" class="user">
 
-                                <div class="draggable">
+                          <!--      <div class="draggable">    -->
                                     <label>{{profile.name}}</label>
                                     <img userid="{{_id}}" class="draggable_img ui-widget-content" src="{{profile.picture}}" alt="logo"/>
-                                </div>
+                            <!--      </div> -->
 
                         </li>
                         {{/each}}
@@ -81,67 +81,81 @@
 
                     <br clear="all"/>
                     <br clear="all"/>
+
+                    <button id="newDailyScrum" class="btn btn-blue">New DailyScrum</button>
+
                     <br clear="all"/>
                     <br clear="all"/>
-                    <br clear="all"/>
+
+                 <!--   <div class="easy-pie-chart-percent easyPieChart" style="display: inline-block; width: 150px; height: 150px; line-height: 150px;" data-percent="89">
+                        <span>0%</span>
+                        <canvas width="300" height="300" style="width: 150px; height: 150px;"></canvas>
+                    </div>
+                     -->
+
+                    <div class="chart pieChart" data-percent="0">
+                        <span class="percentValue">0:00</span>
+                        <canvas width="220" height="220" style="width: 110px; height: 110px;"></canvas>
+                    </div>
 
                     <div id="dailyScrumPanel">
-                     <!--   <p>
-                        <div id="fancyClock"></div>
-                        </p>
-                         -->
+
+
                         <br clear="all"/>
                         {{#each dailyScrum}}
-                            <div class="lfloat">
-                                <h1 style="margin-right:10px">{{date}}</h1>
+                        <div class="lfloat">
+                            <h1 style="margin-right:10px">{{date}}</h1>
+                        </div>
+
+                        <div class="today ui-widget-header todayPair {{_id}}" style="width: 100px;height: 90px;float: left;background:none;">
+                            {{> pairdude }}
+                        </div>
+
+                        <div class="rfloat" style="width: 70%;">
+                            <div id="toolTip" style="width: 80%;float: left;">
+                                <textarea class="newTaskArea {{_id}}" style="width:90%;height:91px">New Task Edit... </textarea>
+                                <div class="tailShadow"></div>
+                                <div class="tail1"></div>
+                                <div class="tail2"></div>
                             </div>
 
-                            <div id="todayPair" class="today ui-widget-header" style="width: 100px;height: 90px;float: left;background:none;">
-                                {{> pairdude }}
-                            </div>
+                            <button id="{{_id}}" class="btn btn-blue addTask">Add Task...</button>
+                            <br clear="all"/>
 
-                            <div class="rfloat" style="width: 70%;">
-                                <div id="toolTip" style="width: 80%;float: left;">
-                                    <textarea class="newTaskArea" style="width:90%;height:91px">New Task Edit... </textarea>
-                                    <div class="tailShadow"></div>
-                                    <div class="tail1"></div>
-                                    <div class="tail2"></div>
-                                </div>
-
-                                <button class="btn btn-blue addTask">Add Task...</button>
-                                <br clear="all"/>
-
-                                {{#each tasks}}
-                                    <li class="UFIRow">
-                                        <div class="clearfix">
-                                            <div class="lfloat">
-                                                <img src="https://lh6.googleusercontent.com/-WA2d3vrn22Q/AAAAAAAAAAI/AAAAAAAAABM/Tis5LLPRCRk/photo.jpg" class="img UFIActorImage" alt="">
+                            {{#each tasks}}
+                            <li class="UFIRow">
+                                <div class="clearfix">
+                                    <div class="lfloat">
+                                        <img src="{{picture}}" class="img UFIActorImage" alt="">
+                                    </div>
+                                    <div>
+                                        <div class="clearfix UFIImageBlockContent">
+                                            <div class="rfloat">
+                                                <a href="#" role="button" aria-label="Nascondi" data-hover="tooltip" data-tooltip-alignh="center" class="uiCloseButton UFICommentCloseButton">
+                                                    <img src="../images/deleteButtons.png">
+                                                </a>
                                             </div>
                                             <div>
-                                                <div class="clearfix UFIImageBlockContent">
-                                                    <div class="rfloat">
-                                                        <a href="#" role="button" aria-label="Nascondi" data-hover="tooltip" data-tooltip-alignh="center" class="uiCloseButton UFICommentCloseButton">
-                                                            <img src="../images/deleteButtons.png">
-                                                        </a>
-                                                    </div>
+                                                <div>
                                                     <div>
-                                                        <div>
-                                                            <div>
-                                                                <span>
                                                                     <span>
-                                                                        <span>{{description}}</span>
+                                                                        <span>
+                                                                            <span>{{description}}</span>
+                                                                        </span>
                                                                     </span>
-                                                                </span>
-                                                            </div>
-                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </li>
-                                {{/each}}
-                            </div>
+                                    </div>
+                                </div>
+                            </li>
+                            {{/each}}
+                        </div>
+                        <br clear="all"/>
+                        <hr width="100%" color="#000000" noshade="false"/>
                         {{/each }}
+
                     </div>
                 </div>
             </div>
