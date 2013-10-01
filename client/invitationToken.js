@@ -57,40 +57,40 @@ Template.joinTeam.events({
             // l'utente viene inserito all'interno di un prodotto
             var product = Products.findOne({slug: currentProduct});
             if (product){
-            var productId = product._id;
+                var productId = product._id;
 
-            // se il role è scrum-master (sm) o product-owner(po) lo aggiungo come tale
-            if (role == 'sm')
-                Products.update( {_id: productId} , {$set:{scrummaster: Meteor.userId()}} );
+                // se il role è scrum-master (sm) o product-owner(po) lo aggiungo come tale
+                if (role == 'sm')
+                    Products.update( {_id: productId} , {$set:{scrummaster: Meteor.userId()}} );
 
-            else if (role == 'po')
-                Products.update( {_id: productId} , {$set:{productowner: Meteor.userId()}} );
+                else if (role == 'po')
+                    Products.update( {_id: productId} , {$set:{productowner: Meteor.userId()}} );
 
-            else {
-                //altrimenti lo aggiungo come team member
-                var teamArray = product.team;
-                for (var i=0; i < teamArray.length; i++){
-                    if (teamArray[i].slug == currentTeam) {
-                        var index = $.inArray(Meteor.userId(), teamArray[i].members);
-                        if (index == -1) {
-                            // se il cliente non è contenuto nel prodotto e team corrente, lo aggiungo
-                            teamArray[i].members.push(Meteor.userId());
-                            Products.update( {_id: productId} , {$set:{team: teamArray}} );
+                else if (role == 'tm') {
+                    //altrimenti lo aggiungo come team member
+                    var teamArray = product.team;
+                    for (var i=0; i < teamArray.length; i++){
+                        if (teamArray[i].slug == currentTeam) {
+                            var index = $.inArray(Meteor.userId(), teamArray[i].members);
+                            if (index == -1) {
+                                // se il cliente non è contenuto nel prodotto e team corrente, lo aggiungo
+                                teamArray[i].members.push(Meteor.userId());
+                                Products.update( {_id: productId} , {$set:{team: teamArray}} );
 
+                            }
+                            break;
                         }
-                        break;
                     }
                 }
+
+
+                var token = getToken();
+
+                if (token)
+                    InvitationToken.remove(token._id);
+
+                location.href="/"+currentProduct+"/team/"+currentTeam;
             }
-        }
-
-            var token = getToken();
-            // todo commentato per debug, è da decommentare
-       //     if (token)
-       //         InvitationToken.remove(token._id);
-
-            location.href="/"+currentProduct+"/team/"+currentTeam;
-
         }
 
         catch(err) {

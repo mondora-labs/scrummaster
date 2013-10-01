@@ -3,14 +3,17 @@ Meteor.subscribe('dailyscrum');
 var tmpDudePicture = "https://lh4.googleusercontent.com/-77wocJdaiXg/AAAAAAAAAAI/AAAAAAAAAAA/NN3q52w3EXQ/s48-c/photo.jpg";
 var tmpDudeUserId = "";
 var timer = 0;
-var maxDailyScrumTime = 10;
+var maxDailyScrumTime = 120;
 var isTimerWorking = false;
+var percentProgress;
 
 function resetTodayPair() {
-
     Session.set('tmpDudePicture',tmpDudePicture);
     Session.set('tmpDudeUserId',tmpDudeUserId);
+}
 
+function resetTimer() {
+    timer = 0;
 }
 
 Template.dailyscrum.rendered = function() {
@@ -24,12 +27,12 @@ Template.dailyscrum.rendered = function() {
             revert: true,
             helper: "clone",
       //      containment: ".todayPair",
-            stack: "div"
+            stack: "div",
       //      grid: [ 50, 100 ],
       //      containment: "#containmentDiv",
       /*      start: function(event, ui) {
 
-            }*/,
+            },*/
             stop: function(event, ui) {
                 if (ui.helper != null && ui.helper.length > 0) {
                     pairMate = ui.helper[0];
@@ -47,22 +50,23 @@ Template.dailyscrum.rendered = function() {
     });
 
 
-    if (Session.get('dailyScrumUserId'))
+    if (Session.get('dailyScrumUserId')) {
         $('#dailyScrumPanel').show();
+      //prova senza nuova classe  $("#"+Session.get('dailyScrumUserId')).addClass('selected');
+    }
     else
         $('#dailyScrumPanel').hide();
 
     $('.chart').easyPieChart({
         animate: 1000,
         onStart: function (){
-
+  //          isTimerWorking = true;
         },
         onStop: function () {
-            timer = 0;
+            resetTimer();
             $('.chart').data('easyPieChart').update(timer);
             $('.percentValue')[0].innerHTML = "0:00";
             $('.user').css("zIndex",0);
-            isTimerWorking = false;
         }
     });
 
@@ -75,21 +79,22 @@ Template.dailyscrum.events({
         var selectedUserId;
 
         if (!isTimerWorking) {
-            if($('.selected').length > 0)
-                $('.selected').removeClass('selected');
+            //prova senza nuova classe           if($('.selected').length > 0)
+            //prova senza nuova classe               $('.selected').removeClass('selected');
 
             selectedUserId = event.target.parentElement.id;
-                $(event.target.parentElement).addClass('selected');
+            //prova senza nuova classe          $(event.target.parentElement).addClass('selected');
 
+            resetTodayPair();
             Session.set('dailyScrumUserId', selectedUserId);
-
-            $('#dailyScrumPanel').show();
-
-            $('.user').css("zIndex",-1);
 
             isTimerWorking = true;
 
-            var percentProgress = setInterval(function() {
+            percentProgress = setInterval(function() {
+                $("canvas").css('background-image','url('+Meteor.users.findOne({_id:Session.get('dailyScrumUserId')}).profile.picture+')');
+
+                timer++;
+
                 $('.chart').data('easyPieChart').update(timer*100/maxDailyScrumTime);
 
                 var minutes = Math.floor(timer/60);
@@ -98,15 +103,16 @@ Template.dailyscrum.events({
                 $('.percentValue')[0].innerHTML = minutes +':' + (seconds < 10 ? ('0'+seconds):seconds);
 
                 if (timer == maxDailyScrumTime) {
-                    timer = 0;
+                    resetTimer();
                     clearInterval(percentProgress);
+                    isTimerWorking = false;
                 }
 
-                timer++;
 
             }, 1000);
         }
-     //   return false;
+
+        return false;
     },
 
     'click .addTask': function (event, template) {
@@ -114,7 +120,6 @@ Template.dailyscrum.events({
         var newTask= {};
         newTask.description = $(".newTaskArea."+event.target.id).val();
 
-        //var pairUser = $('.currentPairTask').attr('userid');
         var pairUser = $('.todayPair.'+event.target.id).find('img').attr('userid');
 
         if (pairUser != null && pairUser != ''){
@@ -169,11 +174,23 @@ Template.dailyscrum.events({
                      product_slug: Session.get('currentProduct'),
                      team_slug: Session.get('currentTeam'),
                      date: formatDate(new Date()),
-                     player: $('.selected')[0].id, //Session.get('dailyScrumUserId'),
+                     player: Session.get('dailyScrumUserId'),
                      tasks:[ ]
                     }
                 );
         }
+        return false;
+    },
+
+    'click .removePair': function (event, template) {
+        resetTodayPair();
+        return false;
+    },
+
+    'click #skipTimer': function (event, template) {
+        resetTimer();
+        clearInterval(percentProgress);
+        isTimerWorking = false;
         return false;
     }
 
@@ -191,20 +208,6 @@ Template.dailyscrum.helpers ({
             ]
         }).fetch().sort(sortDailyScrumByDate); //.reverse();
 
-    /*    if (dailyScrumArray) {
-            dailyScrumArray.forEach(function(tmpDailyScrum){
-                tmpDailyScrum.tasks.forEach(function(tmpTask) {
-
-                    if (tmpTask.pair.length > 0 && tmpTask.pair[0] != '' ){
-                        var tmpUser = Meteor.users.findOne({_id: userId});
-                        if (tmpUser)
-                            tmpTask.picture = tmpUser.profile.picture;
-                    }
-
-                });
-            });
-        } */
-
         if (dailyScrumArray) {
             for (var i=0; i<dailyScrumArray.length; i++) {
                 // se data = oggi o ieri, setto TODAY / YESTERDAY invece della data
@@ -221,13 +224,26 @@ Template.dailyscrum.helpers ({
 
                 }
             }
+
         }
+
 
         return dailyScrumArray;
     }
 });
 
+Template.pairdude.helpers ({
 
+    dudepicture: function() {
+        return Session.get('tmpDudePicture');
+    }
+    ,
+    userid : function() {
+        return Session.get('tmpDudeUserId');
+    }
+});
+
+// todo - spostare tutte le function di util sulle date, presenti in questo file, in un dateUtils.js
 function convertDailyScrumDate(d) {
     // d formattato come '27/09/2013'
 
@@ -259,9 +275,6 @@ function getYesterdayDate(today) {
     // se ieri era sabato
     else if (yesterday.getDay() == 6)
         yesterday.setDate(yesterday.getDate() - 1);
-
-    else
-        yesterday.setDate(today.getDate() - 1);
 
     return yesterday;
 }
@@ -304,7 +317,6 @@ function sortDailyScrumByDate(a, b){
 
 }
 
-// todo - spostare tutte le function di util sulle date, presenti in questo file, in un dateUtils.js
 // Parse a string and convert it to a Date object.
 // If no format is passed, try a list of common formats.
 // If string cannot be parsed, return null.
@@ -531,24 +543,3 @@ function parseString(val, format) {
     }
     return new Date(year,month-1,date,hh,mm,ss);
 };
-
-
-Template.pairdude.helpers ({
-
-    dudepicture: function() {
-        return Session.get('tmpDudePicture');
-    }
-    ,
-    userid : function() {
-        return Session.get('tmpDudeUserId');
-    }
-});
-
-Template.dailyscrum.events({
-
-    'click .removePair': function (event, template) {
-        resetTodayPair();
-        return false;
-    }
-
-});

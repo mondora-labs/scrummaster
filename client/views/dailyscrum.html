@@ -87,19 +87,14 @@
                     <br clear="all"/>
                     <br clear="all"/>
 
-                 <!--   <div class="easy-pie-chart-percent easyPieChart" style="display: inline-block; width: 150px; height: 150px; line-height: 150px;" data-percent="89">
-                        <span>0%</span>
-                        <canvas width="300" height="300" style="width: 150px; height: 150px;"></canvas>
-                    </div>
-                     -->
-
-                    <div class="chart pieChart" data-percent="0">
-                        <span class="percentValue">0:00</span>
-                        <canvas width="220" height="220" style="width: 110px; height: 110px;"></canvas>
-                    </div>
 
                     <div id="dailyScrumPanel">
 
+                        <button id="skipTimer" class="btn btn-default lfloat">Skip</button>
+
+                        <div class="chart pieChart" data-percent="0">
+                            <span class="percentValue">0:00</span>
+                        </div>
 
                         <br clear="all"/>
                         {{#each dailyScrum}}

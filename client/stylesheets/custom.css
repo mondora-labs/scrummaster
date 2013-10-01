@@ -171,9 +171,23 @@
     margin-top: 3%;
 }
 
-/*#fancyClock{
-    margin:40px auto;
-    height:200px;
-    border:1px solid #111111;
-    width:600px;
-} */
+.pieChart {
+    left:20%
+}
+
+canvas {
+    border-radius: 50%;
+    background-size: 110px;
+}
+
+.percentValue {
+    z-index: 10;
+    position: relative;
+    color: white;
+    right:20%;
+}
+
+#skipTimer {
+    left: 32%;
+    margin-top: 3%;
+}
