@@ -9,7 +9,6 @@
     height: 14px;
     *margin-right: .3em;
     line-height: 14px;
-/*    vertical-align: text-top;      */
     background-image: url("/images/pnotify/glyphicons-halflings.png");
     background-position: 14px 14px;
     background-repeat: no-repeat;
@@ -47,6 +46,7 @@
     border: solid 1px #ddd ! important; padding: 1.25em ! important;
     left: 5%;
     width:90%;
+    height: 182px;
 }
 
 #teamlist li {
@@ -58,13 +58,7 @@
 .selected {
     border:solid 3px #00A ! important;
 }
-/*
-.draggable  {
-    width: 50px;
-    float:left;
-    margin: 10px;
-}
-*/
+
 .draggable_img {
     width: 70px;
 }
@@ -164,30 +158,24 @@
     display: block;
     position: relative;
     width: 95%;
-    left: 2%;
 }
 
 .addTask {
     margin-top: 3%;
 }
 
-.pieChart {
-    left:20%
-}
-
 canvas {
     border-radius: 50%;
     background-size: 110px;
+    opacity: 0.5;
 }
 
 .percentValue {
     z-index: 10;
     position: relative;
-    color: white;
-    right:20%;
+    color: black;
 }
 
 #skipTimer {
-    left: 32%;
-    margin-top: 3%;
+    width:112px;
 }

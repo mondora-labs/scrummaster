@@ -3,7 +3,7 @@ Meteor.subscribe('dailyscrum');
 var tmpDudePicture = "https://lh4.googleusercontent.com/-77wocJdaiXg/AAAAAAAAAAI/AAAAAAAAAAA/NN3q52w3EXQ/s48-c/photo.jpg";
 var tmpDudeUserId = "";
 var timer = 0;
-var maxDailyScrumTime = 120;
+var maxDailyScrumTime = 120; //numero di secondi a disposizione per il dailyscrum per ogni utente
 var isTimerWorking = false;
 var percentProgress;
 
@@ -38,7 +38,6 @@ Template.dailyscrum.rendered = function() {
                     pairMate = ui.helper[0];
                     userid = $(ui.helper).attr('userid');
 
-                 //   if (userid != Meteor.userId()) {
                     if (userid != Session.get('dailyScrumUserId')) {
                         Session.set('tmpDudePicture',pairMate.src);
                         Session.set('tmpDudeUserId',userid);
@@ -49,24 +48,25 @@ Template.dailyscrum.rendered = function() {
         });
     });
 
+    var selectedUserId = Session.get('dailyScrumUserId');
 
-    if (Session.get('dailyScrumUserId')) {
+    if (selectedUserId) {
+        $("img."+selectedUserId).css('display','none');
+        $(".pieChart."+selectedUserId).css('display','block');
         $('#dailyScrumPanel').show();
-      //prova senza nuova classe  $("#"+Session.get('dailyScrumUserId')).addClass('selected');
     }
     else
         $('#dailyScrumPanel').hide();
 
     $('.chart').easyPieChart({
         animate: 1000,
-        onStart: function (){
-  //          isTimerWorking = true;
-        },
+
         onStop: function () {
             resetTimer();
-            $('.chart').data('easyPieChart').update(timer);
-            $('.percentValue')[0].innerHTML = "0:00";
-            $('.user').css("zIndex",0);
+            var spanToReset = $('.percentValue');
+            for (var i = 0 ; i<spanToReset.length; i++){
+                $('.percentValue')[i].innerHTML = "0:00";
+            }
         }
     });
 
@@ -79,33 +79,40 @@ Template.dailyscrum.events({
         var selectedUserId;
 
         if (!isTimerWorking) {
-            //prova senza nuova classe           if($('.selected').length > 0)
-            //prova senza nuova classe               $('.selected').removeClass('selected');
 
             selectedUserId = event.target.parentElement.id;
-            //prova senza nuova classe          $(event.target.parentElement).addClass('selected');
 
             resetTodayPair();
             Session.set('dailyScrumUserId', selectedUserId);
 
             isTimerWorking = true;
 
+            $("img."+selectedUserId).css('display','none');
+            $(".pieChart."+selectedUserId).css('display','block');
+
+
             percentProgress = setInterval(function() {
-                $("canvas").css('background-image','url('+Meteor.users.findOne({_id:Session.get('dailyScrumUserId')}).profile.picture+')');
+                $("div."+selectedUserId+" canvas").css('background-image','url('+Meteor.users.findOne({_id:selectedUserId}).profile.picture+')');
+
+                $("img."+selectedUserId).css('display','none');
+                $(".pieChart."+selectedUserId).css('display','block');
 
                 timer++;
 
-                $('.chart').data('easyPieChart').update(timer*100/maxDailyScrumTime);
+                $('.chart.'+selectedUserId).data('easyPieChart').update(timer*100/maxDailyScrumTime);
 
                 var minutes = Math.floor(timer/60);
                 var seconds = timer%60;
 
-                $('.percentValue')[0].innerHTML = minutes +':' + (seconds < 10 ? ('0'+seconds):seconds);
+                $('.percentValue.'+selectedUserId)[0].innerHTML = minutes +':' + (seconds < 10 ? ('0'+seconds):seconds);
 
                 if (timer == maxDailyScrumTime) {
                     resetTimer();
                     clearInterval(percentProgress);
                     isTimerWorking = false;
+                    $("img."+selectedUserId).css('display','block');
+                    $(".pieChart."+selectedUserId).css('display','none');
+                    $('.chart.'+selectedUserId).data('easyPieChart').update(timer);
                 }
 
 
@@ -191,6 +198,10 @@ Template.dailyscrum.events({
         resetTimer();
         clearInterval(percentProgress);
         isTimerWorking = false;
+        var selectedUserId = Session.get('dailyScrumUserId');
+        if (selectedUserId)
+            $('.chart.'+selectedUserId).data('easyPieChart').update(timer);
+
         return false;
     }
 
@@ -244,18 +255,18 @@ Template.pairdude.helpers ({
 });
 
 // todo - spostare tutte le function di util sulle date, presenti in questo file, in un dateUtils.js
-function convertDailyScrumDate(d) {
-    // d formattato come '27/09/2013'
+    function convertDailyScrumDate(d) {
+        // d formattato come '27/09/2013'
 
-    var today = new Date();
+        var today = new Date();
 
-    var yesterday = getYesterdayDate(today);
+        var yesterday = getYesterdayDate(today);
 
-    if (d == formatDate(today))
-        return 'TODAY';
-    else if (d == formatDate(yesterday)) {
-        return 'YESTERDAY';
-    }
+        if (d == formatDate(today))
+            return 'TODAY';
+        else if (d == formatDate(yesterday)) {
+            return 'YESTERDAY';
+        }
     else
         return d;
 

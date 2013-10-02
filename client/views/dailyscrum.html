@@ -69,10 +69,12 @@
                         {{#each teamUserInfo }}
                         <li id="{{_id}}" class="user">
 
-                          <!--      <div class="draggable">    -->
-                                    <label>{{profile.name}}</label>
-                                    <img userid="{{_id}}" class="draggable_img ui-widget-content" src="{{profile.picture}}" alt="logo"/>
-                            <!--      </div> -->
+                                    <label style="text-align: center;">{{profile.name}}</label>
+                                    <img userid="{{_id}}" class="draggable_img ui-widget-content {{_id}}" src="{{profile.picture}}" alt="logo"/>
+                                    <div class="chart pieChart {{_id}}" data-percent="0" style="display: none;">
+                                        <span class="percentValue {{_id}}">0:00</span>
+                                    </div>
+
 
                         </li>
                         {{/each}}
@@ -84,19 +86,18 @@
 
                     <button id="newDailyScrum" class="btn btn-blue">New DailyScrum</button>
 
+
                     <br clear="all"/>
                     <br clear="all"/>
 
 
                     <div id="dailyScrumPanel">
 
-                        <button id="skipTimer" class="btn btn-default lfloat">Skip</button>
-
-                        <div class="chart pieChart" data-percent="0">
-                            <span class="percentValue">0:00</span>
-                        </div>
-
                         <br clear="all"/>
+                        <button id="skipTimer" class="btn btn-default">Skip Timer</button>
+                        <br clear="all"/>
+                        <br clear="all"/>
+
                         {{#each dailyScrum}}
                         <div class="lfloat">
                             <h1 style="margin-right:10px">{{date}}</h1>
@@ -133,11 +134,11 @@
                                             <div>
                                                 <div>
                                                     <div>
-                                                                    <span>
-                                                                        <span>
-                                                                            <span>{{description}}</span>
-                                                                        </span>
-                                                                    </span>
+                                                        <span>
+                                                            <span>
+                                                                <span>{{description}}</span>
+                                                            </span>
+                                                        </span>
                                                     </div>
                                                 </div>
                                             </div>
