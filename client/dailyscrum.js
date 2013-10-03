@@ -14,6 +14,38 @@ function resetTodayPair() {
 
 function resetTimer() {
     timer = 0;
+    var spanToReset = $('.percentValue');
+
+    // resetto lo span contenente l'indicazione del timer
+    for (var i = 0 ; i<spanToReset.length; i++){
+        $('.percentValue').text('0:00');
+    }
+
+    // resetto l'interval di update del timer, e abilito il click sugli altri utenti
+    clearInterval(percentProgress);
+    isTimerWorking = false;
+
+    // reinserisco l'immagine al posto del timer, e lo resetto per il prossimo avvio
+    var selectedUserId = Session.get('dailyScrumUserId');
+    if (selectedUserId) {
+        $("img."+selectedUserId).css('display','block');
+        $(".pieChart."+selectedUserId).css('display','none');
+        $('.chart.'+selectedUserId).data('easyPieChart').update(timer);
+    }
+}
+
+function showDailyScrumPanel () {
+    var selectedUserId = Session.get('dailyScrumUserId');
+    $("img."+selectedUserId).css('display','none');
+    $(".pieChart."+selectedUserId).css('display','block');
+    $('#dailyScrumPanel').show();
+}
+
+function hideDailyScrumPanel () {
+    var selectedUserId = Session.get('dailyScrumUserId');
+    $("img."+selectedUserId).css('display','block');
+    $(".pieChart."+selectedUserId).css('display','none');
+    $('#dailyScrumPanel').hide();
 }
 
 Template.dailyscrum.rendered = function() {
@@ -48,28 +80,37 @@ Template.dailyscrum.rendered = function() {
         });
     });
 
-    var selectedUserId = Session.get('dailyScrumUserId');
-
-    if (selectedUserId) {
-        $("img."+selectedUserId).css('display','none');
-        $(".pieChart."+selectedUserId).css('display','block');
-        $('#dailyScrumPanel').show();
-    }
-    else
-        $('#dailyScrumPanel').hide();
 
     $('.chart').easyPieChart({
-        animate: 1000,
+        animate: 1000/* ,
 
         onStop: function () {
             resetTimer();
-            var spanToReset = $('.percentValue');
+           var spanToReset = $('.percentValue');
             for (var i = 0 ; i<spanToReset.length; i++){
                 $('.percentValue')[i].innerHTML = "0:00";
             }
-        }
+        }*/
     });
 
+    var selectedUserId = Session.get('dailyScrumUserId');
+    if (selectedUserId)
+        showDailyScrumPanel();
+    else
+        hideDailyScrumPanel();
+
+}
+
+Template.dailyScrumTasksPanel.rendered = function() {
+
+    var selectedUserId = Session.get('dailyScrumUserId');
+
+    if (selectedUserId) {
+        showDailyScrumPanel();
+    }
+    else {
+        hideDailyScrumPanel();
+    }
 }
 
 Template.dailyscrum.events({
@@ -87,9 +128,7 @@ Template.dailyscrum.events({
 
             isTimerWorking = true;
 
-            $("img."+selectedUserId).css('display','none');
-            $(".pieChart."+selectedUserId).css('display','block');
-
+            showDailyScrumPanel();
 
             percentProgress = setInterval(function() {
                 $("div."+selectedUserId+" canvas").css('background-image','url('+Meteor.users.findOne({_id:selectedUserId}).profile.picture+')');
@@ -104,52 +143,14 @@ Template.dailyscrum.events({
                 var minutes = Math.floor(timer/60);
                 var seconds = timer%60;
 
-                $('.percentValue.'+selectedUserId)[0].innerHTML = minutes +':' + (seconds < 10 ? ('0'+seconds):seconds);
+                $('.percentValue.'+selectedUserId).text(minutes +':' + (seconds < 10 ? ('0'+seconds):seconds));
 
-                if (timer == maxDailyScrumTime) {
+                if (timer == maxDailyScrumTime)
                     resetTimer();
-                    clearInterval(percentProgress);
-                    isTimerWorking = false;
-                    $("img."+selectedUserId).css('display','block');
-                    $(".pieChart."+selectedUserId).css('display','none');
-                    $('.chart.'+selectedUserId).data('easyPieChart').update(timer);
-                }
-
 
             }, 1000);
         }
 
-        return false;
-    },
-
-    'click .addTask': function (event, template) {
-
-        var newTask= {};
-        newTask.description = $(".newTaskArea."+event.target.id).val();
-
-        var pairUser = $('.todayPair.'+event.target.id).find('img').attr('userid');
-
-        if (pairUser != null && pairUser != ''){
-            newTask.pair = [pairUser];
-        }
-        else
-            newTask.pair = [""];
-
-        var dailyScrumToUpdate = DailyScrum.findOne({_id : event.target.id });
-
-        if (dailyScrumToUpdate) {
-            var arrayTasks = dailyScrumToUpdate.tasks;
-            arrayTasks.splice(0,0,newTask);
-            DailyScrum.update( {_id: dailyScrumToUpdate._id} , {$set:{tasks: arrayTasks}} );
-
-        }
-
-        return false;
-    },
-
-    'focus .newTaskArea': function (event, template) {
-
-        event.target.value = '';
         return false;
     },
 
@@ -178,36 +179,99 @@ Template.dailyscrum.events({
             else
                 DailyScrum.insert(
                     {
-                     product_slug: Session.get('currentProduct'),
-                     team_slug: Session.get('currentTeam'),
-                     date: formatDate(new Date()),
-                     player: Session.get('dailyScrumUserId'),
-                     tasks:[ ]
+                        product_slug: Session.get('currentProduct'),
+                        team_slug: Session.get('currentTeam'),
+                        date: formatDate(new Date()),
+                        player: Session.get('dailyScrumUserId'),
+                        tasks:[ ]
                     }
                 );
         }
         return false;
     },
 
-    'click .removePair': function (event, template) {
-        resetTodayPair();
-        return false;
-    },
-
     'click #skipTimer': function (event, template) {
         resetTimer();
-        clearInterval(percentProgress);
-        isTimerWorking = false;
-        var selectedUserId = Session.get('dailyScrumUserId');
-        if (selectedUserId)
-            $('.chart.'+selectedUserId).data('easyPieChart').update(timer);
 
         return false;
     }
 
 });
 
-Template.dailyscrum.helpers ({
+Template.dailyScrumTasksPanel.events ({
+    'click .addTask': function (event, template) {
+
+        var newTask= {};
+
+        // todo funzione per generare un numero randomico.. capire se c'è qualcosa di meglio
+        newTask.id = Meteor.uuid();
+
+        newTask.description = $(".newTaskArea."+event.target.id).val();
+
+        var pairUser = $('.todayPair.'+event.target.id).find('img').attr('userid');
+
+        if (pairUser != null && pairUser != ''){
+            newTask.pair = [pairUser];
+        }
+        else
+            newTask.pair = [""];
+
+        var dailyScrumToUpdate = DailyScrum.findOne({_id : event.target.id });
+
+        if (dailyScrumToUpdate) {
+            var arrayTasks = dailyScrumToUpdate.tasks;
+            arrayTasks.splice(0,0,newTask);
+            DailyScrum.update( {_id: dailyScrumToUpdate._id} , {$set:{tasks: arrayTasks}} );
+
+        }
+
+        return false;
+    },
+
+    'focus .newTaskArea': function (event, template) {
+        event.target.value = '';
+        return false;
+    },
+
+
+    'click .removePair': function (event, template) {
+        resetTodayPair();
+        return false;
+    },
+
+    'click .deleteTask': function (event, template) {
+
+        var taskToRemove = $(event.target).attr('taskid');
+
+        if (taskToRemove != null && taskToRemove != "") {
+
+            var dateTaskToRemove = $(event.target).attr('taskdate');
+            var tmpDailyScrum = DailyScrum.findOne({
+                $and: [
+                    {product_slug: Session.get('currentProduct')},
+                    {team_slug: Session.get('currentTeam')},
+                    {player: Session.get('dailyScrumUserId')},
+                    {date: dateTaskToRemove}
+                ]
+            });
+
+            if (tmpDailyScrum) {
+                var tmpTasks = tmpDailyScrum.tasks;
+                for (var i=0; i<tmpTasks.length; i++) {
+                    if (tmpTasks[i].id == taskToRemove) {
+                        tmpTasks.splice(i,1);
+                        DailyScrum.update( {_id: tmpDailyScrum._id} , {$set:{tasks: tmpTasks}} );
+                        break;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+});
+
+Template.dailyScrumTasksPanel.helpers ({
 
     dailyScrum: function() {
 
@@ -221,13 +285,21 @@ Template.dailyscrum.helpers ({
 
         if (dailyScrumArray) {
             for (var i=0; i<dailyScrumArray.length; i++) {
+
+                // aggiungo la data al task (mi serve per velocizzare la delete)
+                var dateForTask = dailyScrumArray[i].date;
+
                 // se data = oggi o ieri, setto TODAY / YESTERDAY invece della data
                 dailyScrumArray[i].date = convertDailyScrumDate(dailyScrumArray[i].date);
 
                 // aggiungo link alla foto per i pair users
                 for (var j=0; j<dailyScrumArray[i].tasks.length; j++){
 
+                    // aggiungo la data al task (mi serve per velocizzare la delete)
+                    dailyScrumArray[i].tasks[j].date = dateForTask;
+
                     if (dailyScrumArray[i].tasks[j].pair.length > 0 && dailyScrumArray[i].tasks[j].pair[0] != '' ){
+
                         var tmpUser = Meteor.users.findOne({_id: dailyScrumArray[i].tasks[j].pair[0]});
                         if (tmpUser)
                             dailyScrumArray[i].tasks[j].picture = tmpUser.profile.picture;
@@ -254,19 +326,20 @@ Template.pairdude.helpers ({
     }
 });
 
-// todo - spostare tutte le function di util sulle date, presenti in questo file, in un dateUtils.js
-    function convertDailyScrumDate(d) {
-        // d formattato come '27/09/2013'
 
-        var today = new Date();
+// todo spostare questa parte in un dateUtils.js
+function convertDailyScrumDate(d) {
+    // d formattato come '27/09/2013'
 
-        var yesterday = getYesterdayDate(today);
+    var today = new Date();
 
-        if (d == formatDate(today))
-            return 'TODAY';
-        else if (d == formatDate(yesterday)) {
-            return 'YESTERDAY';
-        }
+    var yesterday = getYesterdayDate(today);
+
+    if (d == formatDate(today))
+        return 'TODAY';
+    else if (d == formatDate(yesterday)) {
+        return 'YESTERDAY';
+    }
     else
         return d;
 

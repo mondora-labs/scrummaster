@@ -86,73 +86,16 @@
 
                     <button id="newDailyScrum" class="btn btn-blue">New DailyScrum</button>
 
+                    <br clear="all"/>
+                    <br clear="all"/>
+
+                    <button id="skipTimer" class="btn btn-default">Skip Timer</button>
 
                     <br clear="all"/>
                     <br clear="all"/>
 
+                    {{>dailyScrumTasksPanel }}
 
-                    <div id="dailyScrumPanel">
-
-                        <br clear="all"/>
-                        <button id="skipTimer" class="btn btn-default">Skip Timer</button>
-                        <br clear="all"/>
-                        <br clear="all"/>
-
-                        {{#each dailyScrum}}
-                        <div class="lfloat">
-                            <h1 style="margin-right:10px">{{date}}</h1>
-                        </div>
-
-                        <div class="today ui-widget-header todayPair {{_id}}" style="width: 100px;height: 90px;float: left;background:none;">
-                            {{> pairdude }}
-                        </div>
-
-                        <div class="rfloat" style="width: 70%;">
-                            <div id="toolTip" style="width: 80%;float: left;">
-                                <textarea class="newTaskArea {{_id}}" style="width:90%;height:91px">New Task Edit... </textarea>
-                                <div class="tailShadow"></div>
-                                <div class="tail1"></div>
-                                <div class="tail2"></div>
-                            </div>
-
-                            <button id="{{_id}}" class="btn btn-blue addTask">Add Task...</button>
-                            <br clear="all"/>
-
-                            {{#each tasks}}
-                            <li class="UFIRow">
-                                <div class="clearfix">
-                                    <div class="lfloat">
-                                        <img src="{{picture}}" class="img UFIActorImage" alt="">
-                                    </div>
-                                    <div>
-                                        <div class="clearfix UFIImageBlockContent">
-                                            <div class="rfloat">
-                                                <a href="#" role="button" aria-label="Nascondi" data-hover="tooltip" data-tooltip-alignh="center" class="uiCloseButton UFICommentCloseButton">
-                                                    <img src="../images/deleteButtons.png">
-                                                </a>
-                                            </div>
-                                            <div>
-                                                <div>
-                                                    <div>
-                                                        <span>
-                                                            <span>
-                                                                <span>{{description}}</span>
-                                                            </span>
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                            {{/each}}
-                        </div>
-                        <br clear="all"/>
-                        <hr width="100%" color="#000000" noshade="false"/>
-                        {{/each }}
-
-                    </div>
                 </div>
             </div>
         </div>
@@ -177,4 +120,68 @@
             <img src="{{dudepicture}}" userid="{{userid}}"/>
         </div>
     </div>
+</template>
+
+
+<template name="dailyScrumTasksPanel">
+    <div id="dailyScrumPanel">
+
+
+        {{#each dailyScrum}}
+        <div class="lfloat">
+            <h1 style="margin-right:10px">{{date}}</h1>
+        </div>
+
+        <div class="today ui-widget-header todayPair {{_id}}" style="width: 100px;height: 90px;float: left;background:none;">
+            {{> pairdude }}
+        </div>
+
+        <div class="rfloat" style="width: 70%;">
+            <div id="toolTip" style="width: 80%;float: left;">
+                <textarea class="newTaskArea {{_id}}" style="width:90%;height:91px">New Task Edit... </textarea>
+                <div class="tailShadow"></div>
+                <div class="tail1"></div>
+                <div class="tail2"></div>
+            </div>
+
+            <button id="{{_id}}" class="btn btn-blue addTask">Add Task...</button>
+            <br clear="all"/>
+
+            {{#each tasks}}
+            <li class="UFIRow">
+                <div class="clearfix">
+                    <div class="lfloat">
+                        <img src="{{picture}}" class="img UFIActorImage" alt="">
+                    </div>
+                    <div>
+                        <div class="clearfix UFIImageBlockContent">
+
+                            {{#if id}}
+                            <div class="rfloat">
+                                <button taskid="{{id}}" taskdate="{{date}}" class="btn btn-default deleteTask">Delete</button>
+                            </div>
+                            {{/if }}
+                            <div>
+                                <div>
+                                    <div>
+                                                        <span>
+                                                            <span>
+                                                                <span>{{description}}</span>
+                                                            </span>
+                                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            {{/each}}
+        </div>
+        <br clear="all"/>
+        <hr width="100%" color="#000000" noshade="false"/>
+        {{/each }}
+
+    </div>
+
 </template>

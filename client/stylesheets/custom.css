@@ -50,7 +50,7 @@
 }
 
 #teamlist li {
-    display: inline-block;
+    display: inline-table;
     margin-left: 30px;
     margin-right: 30px;
 }
@@ -118,24 +118,26 @@
 .rfloat {
     float: right;
 }
+/*
 .UFIRow .UFIImageBlockImage {
     margin: 0;
     color: #3b5998;
     cursor: pointer;
     text-decoration: none;
-}
+} */
 .UFIActorImage {
     width:50px;
 }
 
+/*
 .UFIRow .UFIImageBlockContent {
     margin: 0;
     padding: 0 0 0 8px;
     overflow: hidden;
-}
+} */
 .clearfix {
     zoom: 1;
-}
+}   /*
 .UFIRow .UFICommentCloseButton {
     display: block;
     opacity: 0;
@@ -143,7 +145,7 @@
     z-index: 1;
 }
 .uiCloseButton {
-    background-image: url(../images/deleteButtons.png);
+    background-image: url(images/deleteButtons.png);
     background-repeat: no-repeat;
     height: 15px;
     width: 15px;
@@ -152,7 +154,7 @@
     margin: 0;
     padding: 0;
     zoom: 1;
-}
+}     */
 
 #dailyScrumPanel {
     display: block;
@@ -164,7 +166,7 @@
     margin-top: 3%;
 }
 
-canvas {
+.pieChart canvas {
     border-radius: 50%;
     background-size: 110px;
     opacity: 0.5;
