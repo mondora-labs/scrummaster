@@ -85,7 +85,6 @@ Template.userTeam.events({
 
     'click .deleteTM': function (event, template) {
         var userId = $(event.target).val();
-        alert(userId);
 
         var product = selectedProduct();
         var teamArray = product.team;

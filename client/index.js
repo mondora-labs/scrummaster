@@ -1,3 +1,17 @@
+Template.header.events ({
+    "click .user-avatar" : function(e, tmpl){
+        var panelToOpenClose = $('.dropdown.user-avatar');
+
+        //realizzo il toggle del pannello
+        if (panelToOpenClose.hasClass('open'))
+            panelToOpenClose.removeClass('open');
+        else
+            panelToOpenClose.addClass('open');
+
+        return false;
+    }
+});
+
 Template.userloggedout.events({
        "click #login": function(e, tmpl){
            Meteor.loginWithGoogle({

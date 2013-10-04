@@ -32,6 +32,7 @@ function resetTimer() {
         $(".pieChart."+selectedUserId).css('display','none');
         $('.chart.'+selectedUserId).data('easyPieChart').update(timer);
     }
+    Session.set('dailyScrumUserId');
 }
 
 function showDailyScrumPanel () {
@@ -42,10 +43,11 @@ function showDailyScrumPanel () {
 }
 
 function hideDailyScrumPanel () {
-    var selectedUserId = Session.get('dailyScrumUserId');
-    $("img."+selectedUserId).css('display','block');
-    $(".pieChart."+selectedUserId).css('display','none');
+    //var selectedUserId = Session.get('dailyScrumUserId');
     $('#dailyScrumPanel').hide();
+    //$("img."+selectedUserId).css('display','block');
+    //$(".pieChart."+selectedUserId).css('display','none');
+
 }
 
 Template.dailyscrum.rendered = function() {
@@ -145,7 +147,7 @@ Template.dailyscrum.events({
 
                 $('.percentValue.'+selectedUserId).text(minutes +':' + (seconds < 10 ? ('0'+seconds):seconds));
 
-                if (timer == maxDailyScrumTime)
+                if (timer == maxDailyScrumTime +1)
                     resetTimer();
 
             }, 1000);
@@ -183,7 +185,8 @@ Template.dailyscrum.events({
                         team_slug: Session.get('currentTeam'),
                         date: formatDate(new Date()),
                         player: Session.get('dailyScrumUserId'),
-                        tasks:[ ]
+                        tasks:[ ],
+                        issues: ''
                     }
                 );
         }
@@ -205,6 +208,7 @@ Template.dailyScrumTasksPanel.events ({
 
         // todo funzione per generare un numero randomico.. capire se c'è qualcosa di meglio
         newTask.id = Meteor.uuid();
+        newTask.done = null;
 
         newTask.description = $(".newTaskArea."+event.target.id).val();
 
@@ -266,6 +270,59 @@ Template.dailyScrumTasksPanel.events ({
                 }
             }
         }
+
+        return false;
+    },
+
+    'click .doneCheckBox': function (event, template) {
+
+        var taskToModify = $(event.target).attr('taskid');
+
+        if (taskToModify != null && taskToModify != "") {
+
+            var dateTaskToModify = $(event.target).attr('taskdate');
+            var tmpDailyScrum = DailyScrum.findOne({
+                $and: [
+                    {product_slug: Session.get('currentProduct')},
+                    {team_slug: Session.get('currentTeam')},
+                    {player: Session.get('dailyScrumUserId')},
+                    {date: dateTaskToModify}
+                ]
+            });
+
+            if (tmpDailyScrum) {
+                var doneStatus = $(event.target).is(':checked');
+                if (doneStatus)
+                    $(event.target).attr('checked', 'checked');
+                else
+                    $(event.target).attr('checked');
+
+                var tmpTasks = tmpDailyScrum.tasks;
+                for (var i=0; i<tmpTasks.length; i++) {
+                    if (tmpTasks[i].id == taskToModify) {
+                        if (doneStatus) {
+                            $(event.target).attr('checked', 'checked');
+                            tmpTasks[i].done = 'checked';
+                        }
+                        else {
+                            $(event.target).attr('checked');
+                            tmpTasks[i].done = null;
+                        }
+                        DailyScrum.update( {_id: tmpDailyScrum._id} , {$set:{tasks: tmpTasks}} );
+                        break;
+                    }
+                }
+            }
+        }
+
+        return doneStatus;
+    },
+
+    'click .addIssueBtn': function (event, template) {
+        var dailyScrumId = $(event.target).attr('dailyscrumid');
+        var issuesText = $('.dailyIssues.'+dailyScrumId).val();
+
+        DailyScrum.update( {_id: dailyScrumId} , {$set:{issues: issuesText}} );
 
         return false;
     }

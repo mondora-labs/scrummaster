@@ -158,17 +158,22 @@
 
                             {{#if id}}
                             <div class="rfloat">
+                                <input type="checkbox" taskid="{{id}}" taskdate="{{date}}" class="doneCheckBox" style="margin-bottom: 5%;" {{done}}>
+                                    <span style="margin-right: 20px;">Done</span>
+                                </input>
+
                                 <button taskid="{{id}}" taskdate="{{date}}" class="btn btn-default deleteTask">Delete</button>
                             </div>
                             {{/if }}
+
                             <div>
                                 <div>
                                     <div>
-                                                        <span>
-                                                            <span>
-                                                                <span>{{description}}</span>
-                                                            </span>
-                                                        </span>
+                                        <span>
+                                            <span>
+                                                <span>{{description}}</span>
+                                            </span>
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -176,8 +181,16 @@
                     </div>
                 </div>
             </li>
+
             {{/each}}
+
+            <textarea rows="4" cols="50" class="dailyIssues {{_id}}">{{issues}}</textarea>
+
+            <button dailyscrumid="{{_id}}" class="btn btn-blue addIssueBtn">Submit Issues</button>
+
         </div>
+
+
         <br clear="all"/>
         <hr width="100%" color="#000000" noshade="false"/>
         {{/each }}
