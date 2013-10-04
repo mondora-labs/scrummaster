@@ -164,3 +164,7 @@
 .addIssueBtn {
     margin-left: 55px;
 }
+
+.addedLaterTask {
+    background-color: orange;
+}

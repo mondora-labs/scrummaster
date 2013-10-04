@@ -148,7 +148,12 @@
             <br clear="all"/>
 
             {{#each tasks}}
+
+            {{#if addedLater}}
+            <li class="UFIRow addedLaterTask">
+            {{else }}
             <li class="UFIRow">
+            {{/if }}
                 <div class="clearfix">
                     <div class="lfloat">
                         <img src="{{picture}}" class="img UFIActorImage" alt="">
@@ -171,7 +176,7 @@
                                     <div>
                                         <span>
                                             <span>
-                                                <span>{{description}}</span>
+                                                <span style="margin-left: 2%;">{{description}}</span>
                                             </span>
                                         </span>
                                     </div>

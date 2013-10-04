@@ -223,6 +223,11 @@ Template.dailyScrumTasksPanel.events ({
         var dailyScrumToUpdate = DailyScrum.findOne({_id : event.target.id });
 
         if (dailyScrumToUpdate) {
+
+            // se sto aggiungendo un task ad un dailyscrum diverso da quello odierno, devo notificarlo
+            if (dailyScrumToUpdate.date != formatDate(new Date()))
+                newTask.addedLater = "true";
+
             var arrayTasks = dailyScrumToUpdate.tasks;
             arrayTasks.splice(0,0,newTask);
             DailyScrum.update( {_id: dailyScrumToUpdate._id} , {$set:{tasks: arrayTasks}} );
