@@ -83,11 +83,11 @@ Template.joinTeam.events({
                     }
                 }
 
-
-                var token = getToken();
-
-                if (token)
-                    InvitationToken.remove(token._id);
+       // TODO decommentato per debug
+       //         var token = getToken();
+       //
+       //         if (token)
+       //             InvitationToken.remove(token._id);
 
                 location.href="/"+currentProduct+"/team/"+currentTeam;
             }

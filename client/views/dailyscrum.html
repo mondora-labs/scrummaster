@@ -81,6 +81,7 @@
 
                     </ul>
 
+                    {{#if isScrumMaster}}
                     <br clear="all"/>
                     <br clear="all"/>
 
@@ -90,12 +91,24 @@
                     <br clear="all"/>
 
                     <button id="skipTimer" class="btn btn-default">Skip Timer</button>
+                    {{/if}}
 
                     <br clear="all"/>
                     <br clear="all"/>
 
-                    {{>dailyScrumTasksPanel }}
-
+                    {{#if userSelected }}
+                            {{#if isScrumMaster}}
+                                {{> dailyScrumTasksPanel_SM }}
+                            {{else}}
+                                {{#if isProductOwner}}
+                                    {{> dailyScrumTasksPanel_PO}}
+                                {{else}}
+                                    {{> dailyScrumTasksPanel_TM}}
+                                {{/if}}
+                            {{/if}}
+                    {{else}}
+                        {{> allDailyScrum}}
+                    {{/if }}
                 </div>
             </div>
         </div>
@@ -123,16 +136,63 @@
 </template>
 
 
-<template name="dailyScrumTasksPanel">
-    <div id="dailyScrumPanel">
-
+<template name="allDailyScrum">
+    <div id="allDailyScrumPanel">
 
         {{#each dailyScrum}}
         <div class="lfloat">
             <h1 style="margin-right:10px">{{date}}</h1>
         </div>
 
-        <div class="today ui-widget-header todayPair {{_id}}" style="width: 100px;height: 90px;float: left;background:none;">
+        <div class="rfloat" style="width: 70%;">
+            {{#each tasks}}
+
+            <li class="UFIRow">
+                <div class="clearfix">
+                    <div class="lfloat">
+                        <img src="{{owner}}" class="img UFIActorImage" alt="">
+                    </div>
+                    <div>
+                        <div class="clearfix UFIImageBlockContent">
+
+                            <div>
+                                <div>
+                                    <div>
+                                        <span>
+                                            <span>
+                                                <span class="taskDescription" style="margin-left: 2%;">{{description}}</span>
+                                            </span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+
+            {{/each}}
+
+        </div>
+
+
+        <br clear="all"/>
+        <hr width="100%" color="#000000" noshade="false"/>
+        {{/each }}
+
+    </div>
+
+</template>
+
+<template name="dailyScrumTasksPanel_SM">
+    <div id="dailyScrumPanel">
+
+        {{#each dailyScrum}}
+        <div class="lfloat">
+            <h1 style="margin-right:10px">{{date}}</h1>
+        </div>
+
+        <div class="today ui-widget-header todayPair {{_id}}">
             {{> pairdude }}
         </div>
 
@@ -175,8 +235,8 @@
                                 <div>
                                     <div>
                                         <span>
-                                            <span>
-                                                <span style="margin-left: 2%;">{{description}}</span>
+                                            <span id="{{id}}">
+                                                <span taskid="{{id}}" taskdate="{{date}}" class="taskDescription" style="margin-left: 2%;">{{description}}</span>
                                             </span>
                                         </span>
                                     </div>
@@ -192,6 +252,131 @@
             <textarea rows="4" cols="50" class="dailyIssues {{_id}}">{{issues}}</textarea>
 
             <button dailyscrumid="{{_id}}" class="btn btn-blue addIssueBtn">Submit Issues</button>
+
+        </div>
+
+
+        <br clear="all"/>
+        <hr width="100%" color="#000000" noshade="false"/>
+        {{/each }}
+
+    </div>
+
+</template>
+
+<template name="dailyScrumTasksPanel_PO">
+    <div id="dailyScrumPanel">
+
+        {{#each dailyScrum}}
+        <div class="lfloat">
+            <h1 style="margin-right:10px">{{date}}</h1>
+        </div>
+
+        <div class="rfloat" style="width: 70%;">
+            {{#each tasks}}
+
+            {{#if addedLater}}
+            <li class="UFIRow addedLaterTask">
+                {{else }}
+            <li class="UFIRow">
+                {{/if }}
+                <div class="clearfix">
+                    <div class="lfloat">
+                        <img src="{{picture}}" class="img UFIActorImage" alt="">
+                    </div>
+                    <div>
+                        <div class="clearfix UFIImageBlockContent">
+
+                            {{#if id}}
+                            <div class="rfloat">
+                                <input type="checkbox" taskid="{{id}}" taskdate="{{date}}" disabled="true" class="doneCheckBox" style="margin-bottom: 5%;" {{done}}>
+                                <span style="margin-right: 20px;">Done</span>
+                                </input>
+                            </div>
+                            {{/if }}
+
+                            <div>
+                                <div>
+                                    <div>
+                                        <span>
+                                            <span id="{{id}}">
+                                                <span taskid="{{id}}" taskdate="{{date}}" class="taskDescription" style="margin-left: 2%;">{{description}}</span>
+                                            </span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+
+            {{/each}}
+
+            <textarea rows="4" cols="50" class="dailyIssues {{_id}}">{{issues}}</textarea>
+
+        </div>
+
+
+        <br clear="all"/>
+        <hr width="100%" color="#000000" noshade="false"/>
+        {{/each }}
+
+    </div>
+
+</template>
+
+<template name="dailyScrumTasksPanel_TM">
+    <div id="dailyScrumPanel">
+
+        {{#each dailyScrum}}
+        <div class="lfloat">
+            <h1 style="margin-right:10px">{{date}}</h1>
+        </div>
+
+        <div class="rfloat" style="width: 70%;">
+            {{#each tasks}}
+
+            {{#if addedLater}}
+            <li class="UFIRow addedLaterTask">
+                {{else }}
+            <li class="UFIRow">
+                {{/if }}
+                <div class="clearfix">
+                    <div class="lfloat">
+                        <img src="{{picture}}" class="img UFIActorImage" alt="">
+                    </div>
+                    <div>
+                        <div class="clearfix UFIImageBlockContent">
+
+                            {{#if id}}
+                            <div class="rfloat">
+                                <input type="checkbox" taskid="{{id}}" taskdate="{{date}}" disabled="true" class="doneCheckBox" style="margin-bottom: 5%;" {{done}}>
+                                <span style="margin-right: 20px;">Done</span>
+                                </input>
+
+                            </div>
+                            {{/if }}
+
+                            <div>
+                                <div>
+                                    <div>
+                                        <span>
+                                            <span id="{{id}}">
+                                                <span taskid="{{id}}" taskdate="{{date}}" class="taskDescription" style="margin-left: 2%;">{{description}}</span>
+                                            </span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+
+            {{/each}}
+
+            <textarea rows="4" cols="50" class="dailyIssues {{_id}}">{{issues}}</textarea>
 
         </div>
 

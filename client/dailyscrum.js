@@ -12,7 +12,7 @@ function resetTodayPair() {
     Session.set('tmpDudeUserId',tmpDudeUserId);
 }
 
-function resetTimer() {
+function resetTimer(role, selectedUserId) {
     timer = 0;
     var spanToReset = $('.percentValue');
 
@@ -26,31 +26,237 @@ function resetTimer() {
     isTimerWorking = false;
 
     // reinserisco l'immagine al posto del timer, e lo resetto per il prossimo avvio
-    var selectedUserId = Session.get('dailyScrumUserId');
     if (selectedUserId) {
         $("img."+selectedUserId).css('display','block');
         $(".pieChart."+selectedUserId).css('display','none');
         $('.chart.'+selectedUserId).data('easyPieChart').update(timer);
     }
+
+    if (role == 'SM') {
+        // quando si resetta il timer, viene resettato il flag isSpeaking dell'utente selezionato
+        var userProfile = Meteor.users.findOne({_id:selectedUserId}).profile;
+        userProfile.isSpeaking = null;
+        Meteor.users.update( {_id: selectedUserId} , {$set:{profile: userProfile}} );
+    }
     Session.set('dailyScrumUserId');
+
 }
 
-function showDailyScrumPanel () {
-    var selectedUserId = Session.get('dailyScrumUserId');
+function enableTimer(role, selectedUserId) {
+
+    // quando SM abilita il timer, setta il flag isSpeaking dell'utente selezionato
+    if (role == 'SM') {
+        var userProfile = Meteor.users.findOne({_id:selectedUserId}).profile;
+        userProfile.isSpeaking = true;
+        Meteor.users.update( {_id: selectedUserId} , {$set:{profile: userProfile}} );
+    }
+
+    if (!isTimerWorking) {
+        isTimerWorking = true;
+
+        percentProgress = setInterval(function() {
+            $("div."+selectedUserId+" canvas").css('background-image','url('+Meteor.users.findOne({_id:selectedUserId}).profile.picture+')');
+
+            $("img."+selectedUserId).css('display','none');
+            $(".pieChart."+selectedUserId).css('display','block');
+
+            timer++;
+
+            $('.chart.'+selectedUserId).data('easyPieChart').update(timer*100/maxDailyScrumTime);
+
+            var minutes = Math.floor(timer/60);
+            var seconds = timer%60;
+
+            $('.percentValue.'+selectedUserId).text(minutes +':' + (seconds < 10 ? ('0'+seconds):seconds));
+
+            if (timer == maxDailyScrumTime +1)
+                resetTimer(role, selectedUserId);
+
+        }, 1000);
+    }
+}
+
+function showDailyScrumPanel (selectedUserId) {
     $("img."+selectedUserId).css('display','none');
     $(".pieChart."+selectedUserId).css('display','block');
+    $("div."+selectedUserId+" canvas").css('background-image','url('+Meteor.users.findOne({_id:selectedUserId}).profile.picture+')');
+
+    $('#allDailyScrumPanel').hide();
     $('#dailyScrumPanel').show();
 }
 
 function hideDailyScrumPanel () {
     //var selectedUserId = Session.get('dailyScrumUserId');
     $('#dailyScrumPanel').hide();
+    $('#allDailyScrumPanel').show();
     //$("img."+selectedUserId).css('display','block');
     //$(".pieChart."+selectedUserId).css('display','none');
 
 }
 
+function isScrumMaster() {
+    return Session.get('currentRole') == 'SM';
+}
+
+function isProductOwner() {
+    return Session.get('currentRole') == 'PO';
+}
+
+function isTeamMember() {
+    return Session.get('currentRole') == 'TM';
+}
+
+function getDailyScrumListPerUser(role) {
+
+    if (role == null)
+        return null;
+
+    else if (role == 'SM' || role == 'PO') {
+        var dailyScrumArray =  DailyScrum.find({
+            $and: [
+                {product_slug: Session.get('currentProduct')},
+                {team_slug: Session.get('currentTeam')},
+                {player: Session.get('dailyScrumUserId')}
+            ]
+        }).fetch().sort(sortDailyScrumByDate); //.reverse();
+    }
+
+    // per un team member recupero solo i suoi daily scrum
+    else if (role == 'TM'){
+        var dailyScrumArray =  DailyScrum.find({
+            $and: [
+                {product_slug: Session.get('currentProduct')},
+                {team_slug: Session.get('currentTeam')},
+                {player: (Session.get('dailyScrumUserId')==Meteor.userId())? Meteor.userId() : " "}
+            ]
+        }).fetch().sort(sortDailyScrumByDate); //.reverse();
+    }
+
+
+    if (dailyScrumArray) {
+        for (var i=0; i<dailyScrumArray.length; i++) {
+
+            // aggiungo la data al task (mi serve per velocizzare la delete)
+            var dateForTask = dailyScrumArray[i].date;
+
+            // se data = oggi o ieri, setto TODAY / YESTERDAY invece della data
+            dailyScrumArray[i].date = convertDailyScrumDate(dailyScrumArray[i].date);
+
+            // aggiungo link alla foto per i pair users
+            for (var j=0; j<dailyScrumArray[i].tasks.length; j++){
+
+                // aggiungo la data al task (mi serve per velocizzare la delete)
+                dailyScrumArray[i].tasks[j].date = dateForTask;
+
+                if (dailyScrumArray[i].tasks[j].pair.length > 0 && dailyScrumArray[i].tasks[j].pair[0] != '' ){
+
+                    var tmpUser = Meteor.users.findOne({_id: dailyScrumArray[i].tasks[j].pair[0]});
+                    if (tmpUser)
+                        dailyScrumArray[i].tasks[j].picture = tmpUser.profile.picture;
+                }
+
+            }
+        }
+
+    }
+    return dailyScrumArray;
+}
+
+function getDailyScrumDates () {
+    var dateArray = new Array();
+
+    var dailyScrumArray =  DailyScrum.find({
+        $and: [
+            {product_slug: Session.get('currentProduct')},
+            {team_slug: Session.get('currentTeam')}
+        ]
+    }).fetch().sort(sortDailyScrumByDate);
+
+    if (dailyScrumArray){
+        for (var i=0; i<dailyScrumArray.length; i++){
+            var index = $.inArray(dailyScrumArray[i].date,dateArray);
+            if (index == -1)
+                dateArray.push(dailyScrumArray[i].date)
+        }
+    }
+
+    return dateArray;
+}
+
+function getDailyScrumListPerDay(date) {
+
+    var dayElement = {};
+
+    var dailyScrumArray =  DailyScrum.find({
+        $and: [
+            {product_slug: Session.get('currentProduct')},
+            {team_slug: Session.get('currentTeam')},
+            {date: date}
+        ]
+    }).fetch().sort(sortDailyScrumByDate);
+
+    if (dailyScrumArray!= null && dailyScrumArray.length > 0 ) {
+        dayElement.date = convertDailyScrumDate(dailyScrumArray[0].date);
+        dayElement.tasks = new Array();
+
+        for (var i=0; i<dailyScrumArray.length; i++) {
+            var tmpOwner = Meteor.users.findOne({_id: dailyScrumArray[i].player}).profile.picture;
+            for (var j=0; j<dailyScrumArray[i].tasks.length; j++) {
+                var tmpTask = {};
+                tmpTask.owner = tmpOwner;
+                tmpTask.description = dailyScrumArray[i].tasks[j].description;
+                dayElement.tasks.push(tmpTask);
+            }
+        }
+
+        // non vogliamo visualizzare un daily scrum senza task
+        if (dayElement.tasks.length == 0)
+            return null;
+    }
+    return dayElement;
+}
+
+function getUserIdActuallySpeaking () {
+    var userList = $('.user');
+
+    for (var i=0; i<userList.length; i++) {
+        var currentUser = Meteor.users.findOne({_id: userList[i].id});
+        if (currentUser != null && currentUser.profile.isSpeaking != null){
+            return currentUser._id;
+        }
+    }
+    return null;
+}
+
 Template.dailyscrum.rendered = function() {
+
+    $('.chart').easyPieChart({
+        animate: 1000
+    });
+
+    if (Session.get('currentRole') == 'SM') {
+        var selectedUserId = Session.get('dailyScrumUserId');
+        if (selectedUserId)
+            showDailyScrumPanel(selectedUserId);
+        else
+            hideDailyScrumPanel();
+    }
+    // PO si deve comportare come TM
+    // todo capire se è corretto così
+    else  {
+        var selectedUserId = getUserIdActuallySpeaking();
+        if (selectedUserId != null) {
+            Session.set('dailyScrumUserId',selectedUserId);
+            showDailyScrumPanel(selectedUserId);
+            enableTimer('TM', selectedUserId);
+        }
+        else
+            hideDailyScrumPanel();
+    }
+
+}
+
+Template.dailyScrumTasksPanel_SM.rendered = function() {
 
     if (Session.get('tmpDudePicture') == null)
         resetTodayPair();
@@ -60,13 +266,7 @@ Template.dailyscrum.rendered = function() {
             scroll: false,
             revert: true,
             helper: "clone",
-      //      containment: ".todayPair",
             stack: "div",
-      //      grid: [ 50, 100 ],
-      //      containment: "#containmentDiv",
-      /*      start: function(event, ui) {
-
-            },*/
             stop: function(event, ui) {
                 if (ui.helper != null && ui.helper.length > 0) {
                     pairMate = ui.helper[0];
@@ -81,78 +281,30 @@ Template.dailyscrum.rendered = function() {
             }
         });
     });
+}
 
-
-    $('.chart').easyPieChart({
-        animate: 1000/* ,
-
-        onStop: function () {
-            resetTimer();
-           var spanToReset = $('.percentValue');
-            for (var i = 0 ; i<spanToReset.length; i++){
-                $('.percentValue')[i].innerHTML = "0:00";
-            }
-        }*/
-    });
-
-    var selectedUserId = Session.get('dailyScrumUserId');
-    if (selectedUserId)
-        showDailyScrumPanel();
-    else
-        hideDailyScrumPanel();
+Template.dailyScrumTasksPanel_TM.rendered = function() {
 
 }
 
-Template.dailyScrumTasksPanel.rendered = function() {
-
-    var selectedUserId = Session.get('dailyScrumUserId');
-
-    if (selectedUserId) {
-        showDailyScrumPanel();
-    }
-    else {
-        hideDailyScrumPanel();
-    }
-}
-
-Template.dailyscrum.events({
+Template.dailyscrum.events ({
 
     'click .user': function (event, template) {
 
-        var selectedUserId;
+        // solo il click dello scrum-master fa partire il timer
+        if (Session.get('currentRole') == 'SM') {
+            var selectedUserId;
 
-        if (!isTimerWorking) {
+            if (!isTimerWorking) {
 
-            selectedUserId = event.target.parentElement.id;
+                selectedUserId = event.target.parentElement.id;
+                resetTodayPair();
+                Session.set('dailyScrumUserId', selectedUserId);
+                showDailyScrumPanel(selectedUserId);
 
-            resetTodayPair();
-            Session.set('dailyScrumUserId', selectedUserId);
-
-            isTimerWorking = true;
-
-            showDailyScrumPanel();
-
-            percentProgress = setInterval(function() {
-                $("div."+selectedUserId+" canvas").css('background-image','url('+Meteor.users.findOne({_id:selectedUserId}).profile.picture+')');
-
-                $("img."+selectedUserId).css('display','none');
-                $(".pieChart."+selectedUserId).css('display','block');
-
-                timer++;
-
-                $('.chart.'+selectedUserId).data('easyPieChart').update(timer*100/maxDailyScrumTime);
-
-                var minutes = Math.floor(timer/60);
-                var seconds = timer%60;
-
-                $('.percentValue.'+selectedUserId).text(minutes +':' + (seconds < 10 ? ('0'+seconds):seconds));
-
-                if (timer == maxDailyScrumTime +1)
-                    resetTimer();
-
-            }, 1000);
+                enableTimer('SM',selectedUserId);
+            }
         }
-
         return false;
     },
 
@@ -194,14 +346,15 @@ Template.dailyscrum.events({
     },
 
     'click #skipTimer': function (event, template) {
-        resetTimer();
-
+        resetTimer(Session.get('currentRole'),Session.get('dailyScrumUserId'));
         return false;
     }
 
+
 });
 
-Template.dailyScrumTasksPanel.events ({
+Template.dailyScrumTasksPanel_SM.events ({
+
     'click .addTask': function (event, template) {
 
         var newTask= {};
@@ -241,7 +394,6 @@ Template.dailyScrumTasksPanel.events ({
         event.target.value = '';
         return false;
     },
-
 
     'click .removePair': function (event, template) {
         resetTodayPair();
@@ -330,52 +482,127 @@ Template.dailyScrumTasksPanel.events ({
         DailyScrum.update( {_id: dailyScrumId} , {$set:{issues: issuesText}} );
 
         return false;
-    }
-});
+    },
 
-Template.dailyScrumTasksPanel.helpers ({
+    'click .taskDescription': function (event, template) {
 
-    dailyScrum: function() {
+        if (Session.get('currentRole')== 'SM') {
+            //l'evento va gestito solo nel caso in cui clicco sullo span anzichè sull'input-text
+            if ($(event.target).prop("tagName") == 'SPAN') {
+                var input = $('<input />', {'type': 'text',
+                                            'class': 'taskDescription',
+                                            'taskid': $(event.target).attr('taskid') ,
+                                            'taskdate': $(event.target).attr('taskdate') ,
+                                            'style' : 'width:70%',
+                                            'value': $(event.target).text()});
+                $(event.target).parent().append(input);
+                $(event.target).remove();
+                input.focus();
+            }
+        }
+    },
 
-        var dailyScrumArray =  DailyScrum.find({
-            $and: [
-                {product_slug: Session.get('currentProduct')},
-                {team_slug: Session.get('currentTeam')},
-                {player: Session.get('dailyScrumUserId')}
-            ]
-        }).fetch().sort(sortDailyScrumByDate); //.reverse();
+    'blur .taskDescription': function (event, template) {
 
-        if (dailyScrumArray) {
-            for (var i=0; i<dailyScrumArray.length; i++) {
+        var taskIdToModify = $(event.target).attr('taskid');
+        var taskDescription = $(event.target).val();
 
-                // aggiungo la data al task (mi serve per velocizzare la delete)
-                var dateForTask = dailyScrumArray[i].date;
+        if (taskIdToModify != null && taskIdToModify != "" && taskDescription != "") {
 
-                // se data = oggi o ieri, setto TODAY / YESTERDAY invece della data
-                dailyScrumArray[i].date = convertDailyScrumDate(dailyScrumArray[i].date);
+            var dateTaskToModify = $(event.target).attr('taskdate');
+            var tmpDailyScrum = DailyScrum.findOne({
+                $and: [
+                    {product_slug: Session.get('currentProduct')},
+                    {team_slug: Session.get('currentTeam')},
+                    {player: Session.get('dailyScrumUserId')},
+                    {date: dateTaskToModify}
+                ]
+            });
 
-                // aggiungo link alla foto per i pair users
-                for (var j=0; j<dailyScrumArray[i].tasks.length; j++){
-
-                    // aggiungo la data al task (mi serve per velocizzare la delete)
-                    dailyScrumArray[i].tasks[j].date = dateForTask;
-
-                    if (dailyScrumArray[i].tasks[j].pair.length > 0 && dailyScrumArray[i].tasks[j].pair[0] != '' ){
-
-                        var tmpUser = Meteor.users.findOne({_id: dailyScrumArray[i].tasks[j].pair[0]});
-                        if (tmpUser)
-                            dailyScrumArray[i].tasks[j].picture = tmpUser.profile.picture;
+            if (tmpDailyScrum) {
+                var tmpTasks = tmpDailyScrum.tasks;
+                for (var i=0; i<tmpTasks.length; i++) {
+                    if (tmpTasks[i].id == taskIdToModify) {
+                        tmpTasks[i].description = taskDescription;
+                        DailyScrum.update( {_id: tmpDailyScrum._id} , {$set:{tasks: tmpTasks}} );
+                        break;
                     }
-
                 }
             }
 
+
+            var span = $('<span />', {'class': 'taskDescription',
+                                      'taskid': $(event.target).attr('taskid') ,
+                                      'taskdate': $(event.target).attr('taskdate') ,
+                                      'style': 'margin-left: 2%;'
+                                     }
+                        );
+
+            $(event.target).parent().append(span.html(taskDescription));
+            $(event.target).remove();
         }
-
-
-        return dailyScrumArray;
+        return false;
     }
 });
+
+
+Template.dailyscrum.helpers ({
+    userSelected : function() {
+        return Session.get('dailyScrumUserId');
+    },
+
+    isScrumMaster : function() {
+        return isScrumMaster();
+    },
+
+    isProductOwner : function() {
+        return isProductOwner();
+    },
+
+    isTeamMember : function() {
+        return isTeamMember();
+    }
+});
+
+
+Template.dailyScrumTasksPanel_SM.helpers ({
+
+    dailyScrum: function() {
+        return getDailyScrumListPerUser('SM');
+    }
+});
+
+Template.dailyScrumTasksPanel_PO.helpers ({
+
+    dailyScrum: function() {
+        return getDailyScrumListPerUser('PO');
+    }
+});
+
+Template.dailyScrumTasksPanel_TM.helpers ({
+
+    dailyScrum: function() {
+        return getDailyScrumListPerUser('TM');
+    }
+});
+
+Template.allDailyScrum.helpers ({
+
+    dailyScrum: function() {
+
+        var allDailyScrumArray = new Array();
+        var dateArray = getDailyScrumDates();
+
+        for (var i=0; i<dateArray.length; i++) {
+            var tmpDaily = getDailyScrumListPerDay(dateArray[i]);
+            if (tmpDaily != null)
+                allDailyScrumArray.push(getDailyScrumListPerDay(dateArray[i]));
+        }
+
+        return allDailyScrumArray;
+    }
+});
+
 
 Template.pairdude.helpers ({
 
@@ -387,6 +614,12 @@ Template.pairdude.helpers ({
         return Session.get('tmpDudeUserId');
     }
 });
+
+
+
+
+
+
 
 
 // todo spostare questa parte in un dateUtils.js

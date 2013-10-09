@@ -59,6 +59,13 @@
     border:solid 3px #00A ! important;
 }
 
+.todayPair {
+    width: 100px;
+    height: 90px;
+    float: left;
+    background:none;
+}
+
 .draggable_img {
     width: 70px;
 }
@@ -128,6 +135,12 @@
 }
 
 #dailyScrumPanel {
+    display: block;
+    position: relative;
+    width: 95%;
+}
+
+#allDailyScrumPanel {
     display: block;
     position: relative;
     width: 95%;

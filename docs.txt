@@ -50,3 +50,9 @@ Meteor.users.find({
         {username: Session.get('searchedName')}
       ]
     });
+
+== per testare lo switch del timer nella pagina dailyscrum, eseguire su console
+var selectedUserId = "henXgdno47ERaQCF8";
+var userProfile = Meteor.users.findOne({_id:selectedUserId}).profile;
+userProfile.isSpeaking = true;  //or null
+Meteor.users.update( {_id: selectedUserId} , {$set:{profile: userProfile}} );
