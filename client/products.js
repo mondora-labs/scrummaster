@@ -124,6 +124,12 @@ Template.dailyscrum.helpers({
     }
 });
 
+Template.retrospectives.helpers({
+    teamInfo: function() {
+        return selectedTeam();
+    }
+});
+
 Template.matchToken.helpers({
     teamInfo: function() {
         return selectedTeam() ;

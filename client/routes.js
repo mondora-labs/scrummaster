@@ -46,6 +46,14 @@ Meteor.Router.add({
             if (role != null)
                 Session.set('currentRole', role);
         }
+    },
+
+    '/:product/retrospectives/:team': {
+        to: 'retrospectives',
+        and: function(product, team) {
+            Session.set('currentTeam', team);
+            Session.set('currentProduct', product);
+        }
     }
 
 });

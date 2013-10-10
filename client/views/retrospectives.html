@@ -1,0 +1,136 @@
+<template name="retrospectives">
+    {{#with teamInfo}}
+    <div class="container-fluid">
+        <div class="row-fluid">
+
+            <div class="area-top clearfix">
+                <div class="pull-left header">
+                    <h3 class="title">
+                        <i class="icon-edit"></i>
+                        Retrospectives
+                    </h3>
+                </div>
+
+                <ul class="inline pull-right sparkline-box">
+
+                    <li class="sparkline-row">
+                        <h4 class="blue"><span>Commits</span> 847</h4>
+                        <div class="sparkline big" data-color="blue"><!--4,5,3,1,0,10,9,3,0,4--></div>
+                    </li>
+
+                    <li class="sparkline-row">
+                        <h4 class="green"><span>Updates</span> 12</h4>
+                        <div class="sparkline big" data-color="green"><!--24,10,13,15,3,7,8,29,7,14,13,23--></div>
+                    </li>
+
+                    <li class="sparkline-row">
+                        <h4 class="red"><span>Pomodoros</span> 83 so far</h4>
+                        <div class="sparkline big"><!--4,,7,12,12,3,4,5,9,9--></div>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid padded">
+        <div class="row-fluid">
+
+            <!-- Breadcrumb line -->
+
+            <div id="breadcrumbs">
+                <div class="breadcrumb-button blue">
+                    <span class="breadcrumb-label"><i class="icon-home"></i> Home</span>
+                    <span class="breadcrumb-arrow"><span></span></span>
+                </div>
+
+
+
+                <div class="breadcrumb-button">
+          <span class="breadcrumb-label">
+            <i class="icon-edit"></i>Retrospectives
+          </span>
+                    <span class="breadcrumb-arrow"><span></span></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container-fluid padded">
+        <div class="row-fluid">
+            <h3 style="text-align: center;">TEAM "{{name}}"</h3>
+
+            <br clear="all"/>
+            <button id="newRetrospective" class="btn btn-blue">New Retrospective</button>
+            <br clear="all"/>
+
+            <div id="retrospectivesPanel">
+
+                {{#each retrospectives}}
+                    <div class="retrospectivePost">
+                        <!--<h1 style="margin-right:10px">{{date}}</h1>  -->
+                        <div class="retrospectiveDate">
+                            <p>
+                                <span class="day">{{date}}</span>
+                            </p>
+                        </div>
+
+                        <div>
+
+                            <h3>{{description}}</h3>
+                            <br clear="all"/>
+
+                            <li class="UFIRow">
+                                <div class="UFIImageBlockContent">
+                                    <textarea class="UFIAddLessonLearnedInput {{_id}}">Add new Lesson Learned...</textarea>
+                                    <button type="submit" class="btn btn-blue addLessonLearned" retrospectiveId="{{_id}}" >Add</button>
+                                </div>
+                            </li>
+                            <br clear="all"/>
+                            <br clear="all"/>
+
+                            {{#each lessonlearned}}
+                                <li class="UFIRow">
+                                    <div class="clearfix">
+                                        <span style="margin-left: 2%;">{{description}}</span>
+                                    </div>
+                                    <br clear="all"/>
+                                </li>
+
+                                <li class="UFIRow">
+                                    <div class="lfloat">
+                                        <img class="img UFIActorImage" src="{{currentUserImage}}">
+                                    </div>
+                                    <div class="UFIImageBlockContent">
+                                        <textarea class="UFIAddCommentInput {{id}}">Scrivi un commento...</textarea>
+                                        <button type="submit" class="btn btn-blue addTopicComment" retrospectiveId="{{retrospectiveId}}" lessonlearnedId="{{id}}">Add Comment</button>
+                                    </div>
+                                </li>
+
+                                {{#each comments}}
+                                <li class="UFIRow">
+                                    <div class="clearfix">
+                                        <div class="lfloat">
+                                            <img class="img UFIActorImage" src="{{user}}">
+                                        </div>
+                                        <div class="UFIImageBlockContent">
+                                            <span style="margin-left: 2%;">{{text}}</span>
+                                        </div>
+                                    </div>
+                                </li>
+                                {{/each}}
+
+                                <br clear="all"/>
+                            {{/each}}
+                        </div>
+                    </div>
+
+                    <hr width="100%" color="#000000" noshade="false"/>
+                {{/each}}
+            </div>
+        </div>
+    </div>
+
+    {{/with}}
+</template>

@@ -2,6 +2,7 @@ Products = new Meteor.Collection('Products');
 DailyScrum = new Meteor.Collection('dailyscrum');
 InvitationToken = new Meteor.Collection('invitationToken');
 FriendsList = new Meteor.Collection('friendsList');
+Retrospectives = new Meteor.Collection('retrospectives');
 
 
 if (Meteor.isServer) {
@@ -28,5 +29,9 @@ if (Meteor.isServer) {
 
   Meteor.publish( "friendsList", function() {
     return Meteor.users.find();
+  });
+
+  Meteor.publish( "retrospectives", function() {
+    return Retrospectives.find();
   });
 }

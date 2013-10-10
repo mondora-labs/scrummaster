@@ -38,6 +38,29 @@ DailyScrum.insert( {
                           ]
                    } );
 
+Retrospectives.insert( {
+                    product_slug: "matutorbis",
+                    team_slug: "moschettieri",
+                    date: '07/10/2013',
+                    description: 'short description...',
+                    lessonlearned:[ {
+                                        id:"aaaaaaaaa",
+                                        description:"Liberare la principessa dalla Torre.",
+                                        comments: [ ]
+                                    },
+                                    {
+                                        id:"bbbbbbbbb",
+                                        description:"Introdurre lo Sprint Planning Meeting Light facendone la stima durante lo sprint",
+                                        comments: [ ]
+                                    },
+                                    {
+                                        id:"ccccccccc",
+                                        description:"Usare la carta salto del turno di rotazione",
+                                        comments: [ ]
+                                    }
+                                  ]
+                   } );
+
 == What I am Learning 
 Products.update( {_id: "Ybhp3fCfcWtDrdryj"} , {$set:{name: 'Zanichelli Matutor Bis'}} );
 https://atmosphere.meteor.com/package/crypto-md5
