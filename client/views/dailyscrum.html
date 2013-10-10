@@ -81,30 +81,28 @@
 
                     </ul>
 
-                    {{#if isScrumMaster}}
-                    <br clear="all"/>
-                    <br clear="all"/>
-
-                    <button id="newDailyScrum" class="btn btn-blue">New DailyScrum</button>
-
-                    <br clear="all"/>
-                    <br clear="all"/>
-
-                    <button id="skipTimer" class="btn btn-default">Skip Timer</button>
-                    {{/if}}
-
                     <br clear="all"/>
                     <br clear="all"/>
 
                     {{#if userSelected }}
+
                             {{#if isScrumMaster}}
+                                <button id="newDailyScrum" class="btn btn-blue">New DailyScrum</button>
+                                <br clear="all"/>
+                                <br clear="all"/>
+                                <button id="skipTimer" class="btn btn-default">Skip Timer</button>
+                                <br clear="all"/>
+                                <br clear="all"/>
                                 {{> dailyScrumTasksPanel_SM }}
+
                             {{else}}
+
                                 {{#if isProductOwner}}
                                     {{> dailyScrumTasksPanel_PO}}
                                 {{else}}
                                     {{> dailyScrumTasksPanel_TM}}
                                 {{/if}}
+
                             {{/if}}
                     {{else}}
                         {{> allDailyScrum}}

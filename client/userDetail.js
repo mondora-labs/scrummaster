@@ -18,7 +18,7 @@ function getUserTeamList() {
                 var index = $.inArray(Session.get('userId'), products[i].team[j].members);
                 if ( index != -1 ||
                      products[i].scrummaster == Session.get('userId') ||
-                     products[i].scrummaster == Session.get('userId')
+                     products[i].productowner == Session.get('userId')
                     ) {
                     teamList.push({
                         product: products[i].slug,
