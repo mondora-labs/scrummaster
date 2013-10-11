@@ -128,7 +128,7 @@ Template.retrospectivesList.events ({
             var lessonLearnedArray = retrospectiveElement.lessonlearned;
             for (var i=0; i<lessonLearnedArray.length; i++) {
                 if (lessonLearnedArray[i].id == lessonlearnedId) {
-                    lessonLearnedArray[i].comments.splice(0,0,newComment);
+                    lessonLearnedArray[i].comments.push(newComment);
                     break;
                 }
             }

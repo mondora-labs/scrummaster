@@ -104,35 +104,35 @@
                 <br clear="all"/>
 
                 {{#each lessonlearned}}
-                <li class="UFIRow">
-                    <div class="clearfix">
-                        <span style="margin-left: 2%;">{{description}}</span>
-                    </div>
-                    <br clear="all"/>
-                </li>
+                    <li class="UFIRow">
+                        <div class="clearfix">
+                            <span style="margin-left: 2%;">{{description}}</span>
+                        </div>
+                        <br clear="all"/>
+                    </li>
 
-                <li class="UFIRow">
-                    <div class="lfloat">
-                        <img class="img UFIActorImage" src="{{currentUserImage}}">
-                    </div>
-                    <div class="UFIImageBlockContent">
-                        <textarea class="UFIAddCommentInput {{id}}">Scrivi un commento...</textarea>
-                        <button type="submit" class="btn btn-blue addTopicComment" retrospectiveId="{{retrospectiveId}}" lessonlearnedId="{{id}}">Add Comment</button>
-                    </div>
-                </li>
+                    {{#each comments}}
+                    <li class="UFIRow">
+                        <div class="clearfix">
+                            <div class="lfloat">
+                                <img class="img UFIActorImage" src="{{user}}">
+                            </div>
+                            <div class="UFIImageBlockContent">
+                                <span style="margin-left: 2%;">{{text}}</span>
+                            </div>
+                        </div>
+                    </li>
+                    {{/each}}
 
-                {{#each comments}}
-                <li class="UFIRow">
-                    <div class="clearfix">
+                    <li class="UFIRow">
                         <div class="lfloat">
-                            <img class="img UFIActorImage" src="{{user}}">
+                            <img class="img UFIActorImage" src="{{currentUserImage}}">
                         </div>
                         <div class="UFIImageBlockContent">
-                            <span style="margin-left: 2%;">{{text}}</span>
+                            <textarea class="UFIAddCommentInput {{id}}">Scrivi un commento...</textarea>
+                            <button type="submit" class="btn btn-blue addTopicComment" retrospectiveId="{{retrospectiveId}}" lessonlearnedId="{{id}}">Add Comment</button>
                         </div>
-                    </div>
-                </li>
-                {{/each}}
+                    </li>
 
                 <br clear="all"/>
                 {{/each}}
