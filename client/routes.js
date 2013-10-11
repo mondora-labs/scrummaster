@@ -14,6 +14,8 @@ Meteor.Router.add({
 		and: function(product, team) {
 			Session.set('currentTeam', team);
 			Session.set('currentProduct', product);
+            Session.set('onlyTodayDailyScrum',1);
+            Session.set('onlyLastRetrospective',1);
 	    }
 	},
 
@@ -41,6 +43,7 @@ Meteor.Router.add({
         and: function(product, team) {
             Session.set('currentTeam', team);
             Session.set('currentProduct', product);
+            Session.set('onlyTodayDailyScrum',0);
 
             var role = getUserRoleForCurrentTeam(product, team);
             if (role != null)
@@ -53,6 +56,11 @@ Meteor.Router.add({
         and: function(product, team) {
             Session.set('currentTeam', team);
             Session.set('currentProduct', product);
+            Session.set('onlyLastRetrospective',0);
+
+            var role = getUserRoleForCurrentTeam(product, team);
+            if (role != null)
+                Session.set('currentRole', role);
         }
     }
 

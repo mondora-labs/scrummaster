@@ -134,15 +134,43 @@
 #dailyScrumPanel {
     display: block;
     position: relative;
-    width: 95%;
+    /*width: 95%;  */
+    width: 90%;
+    margin-left: 60px;
 }
 
 #allDailyScrumPanel {
     display: block;
     position: relative;
-    width: 95%;
+    width: 90%;
+    margin-left: 60px;
 }
 
+.dailyScrumDate {
+    width: 100px;
+    padding-bottom: 14px;
+    float: left;
+    margin-right: 10px;
+    margin-top: 20px;
+}
+
+.dailyScrumDate p, .shadow {
+    background: #EB374B;
+    padding: 5px 10px;
+    margin-bottom: 0;
+    line-height: 1;
+    text-align: right;
+    color: #fff;
+    font-size: 0.75em;
+    position: relative;
+    z-index: 2;
+}
+
+.dailyScrumDate .day {
+    font-size: 1.6875em;
+    display: block;
+    clear: both;
+}
 
 .addTask {
     margin-top: 3%;
@@ -182,6 +210,13 @@
 /************** END - DAILY SCRUM PAGE **************/
 
 /************** RETROSPECTIVES PAGE **************/
+#newRetrospectiveDescr {
+    width: 40%;
+    margin-top: 9px;
+    margin-left: 20px;
+    position: relative;
+}
+
 #retrospectivesPanel {
     display: block;
     position: relative;

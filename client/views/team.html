@@ -127,6 +127,10 @@
     </div>
 
   </div>
+
+        {{> teamTodayDailyScrum}}
+
+        {{> teamRetrospective }}
 </div>
 
 
@@ -170,15 +174,6 @@
 
 
 <template name="userTeam">
-  <!--
-    <li><img class="menu-avatar" src="https://lh4.googleusercontent.com/-2L5LK_vIIuQ/AAAAAAAAAAI/AAAAAAAAAjk/nymGrgsgg7I/photo.jpg">
-        <a href="/user/francescomondora"> Francesco Mondora</a> [ <a href="#ban">Ban!</a> | <a href="#ban">Delete!</a> ]
-    </li>
-
-    <li><img class="menu-avatar" src="https://lh3.googleusercontent.com/-LvnlpR-c3Wg/AAAAAAAAAAI/AAAAAAAAAAA/WcOBSmrHA04/s48-c/photo.jpg">
-        davide.morri@mondora.com (invited) [ <a href="#inviteagain">Invite Again</a> | <a href="#ban">Delete!</a> ]
-    </li>
-    -->
     {{#with scrummaster}}
     {{#if scrummaster}}
         <li><img class="menu-avatar" src="{{profile.picture}}">
@@ -203,4 +198,42 @@
             <button type="button" class="btn btn-blue deleteTM" style="float:right" value="{{id}}">Delete</button>
         </li>
     {{/each}}
+</template>
+
+<template name="teamTodayDailyScrum">
+    <div class="span8" style="float:right">
+
+        <div class="box">
+            <div class="box-header">
+                <span class="title">Daily Scrum</span>
+            </div>
+
+            <div class="box-content" style="width: 68%;margin-left: 12%;">
+                <br clear="all"/>
+                {{> allDailyScrum}}
+                <br clear="all"/>
+            </div>
+        </div>
+    </div>
+
+</template>
+
+<template name="teamRetrospective">
+    <div class="span8" style="float:right">
+
+        <div class="box">
+            <div class="box-header">
+                <span class="title">Last Retrospective</span>
+            </div>
+
+            <div class="box-content">
+                <br clear="all"/>
+                <div>
+                    {{> retrospectivesList}}
+                </div>
+                <br clear="all"/>
+            </div>
+        </div>
+    </div>
+
 </template>

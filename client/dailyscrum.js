@@ -163,23 +163,32 @@ function getDailyScrumListPerUser(role) {
 }
 
 function getDailyScrumDates () {
+
     var dateArray = new Array();
+    var onlyTodayDailyScrum = Session.get('onlyTodayDailyScrum');
 
-    var dailyScrumArray =  DailyScrum.find({
-        $and: [
-            {product_slug: Session.get('currentProduct')},
-            {team_slug: Session.get('currentTeam')}
-        ]
-    }).fetch().sort(sortDailyScrumByDate);
+    if (onlyTodayDailyScrum == null || onlyTodayDailyScrum == 0) {
+       // recupero tutte le date dei daily scrum
+        var dailyScrumArray =  DailyScrum.find({
+            $and: [
+                {product_slug: Session.get('currentProduct')},
+                {team_slug: Session.get('currentTeam')}
+            ]
+        }).fetch().sort(sortDailyScrumByDate);
 
-    if (dailyScrumArray){
-        for (var i=0; i<dailyScrumArray.length; i++){
-            var index = $.inArray(dailyScrumArray[i].date,dateArray);
-            if (index == -1)
-                dateArray.push(dailyScrumArray[i].date)
+        if (dailyScrumArray){
+            for (var i=0; i<dailyScrumArray.length; i++){
+                var index = $.inArray(dailyScrumArray[i].date,dateArray);
+                if (index == -1)
+                    dateArray.push(dailyScrumArray[i].date);
+            }
         }
     }
 
+    else {
+        // recupero solo la data odierna (serve per la pagina del team)
+        dateArray.push(formatDate(new Date()));
+    }
     return dateArray;
 }
 
@@ -200,12 +209,15 @@ function getDailyScrumListPerDay(date) {
         dayElement.tasks = new Array();
 
         for (var i=0; i<dailyScrumArray.length; i++) {
-            var tmpOwner = Meteor.users.findOne({_id: dailyScrumArray[i].player}).profile.picture;
-            for (var j=0; j<dailyScrumArray[i].tasks.length; j++) {
-                var tmpTask = {};
-                tmpTask.owner = tmpOwner;
-                tmpTask.description = dailyScrumArray[i].tasks[j].description;
-                dayElement.tasks.push(tmpTask);
+            var user = Meteor.users.findOne({_id: dailyScrumArray[i].player})
+            if (user) {
+                var tmpOwner = user.profile.picture;
+                for (var j=0; j<dailyScrumArray[i].tasks.length; j++) {
+                    var tmpTask = {};
+                    tmpTask.owner = tmpOwner;
+                    tmpTask.description = dailyScrumArray[i].tasks[j].description;
+                    dayElement.tasks.push(tmpTask);
+                }
             }
         }
 
@@ -283,9 +295,6 @@ Template.dailyScrumTasksPanel_SM.rendered = function() {
     });
 }
 
-Template.dailyScrumTasksPanel_TM.rendered = function() {
-
-}
 
 Template.dailyscrum.events ({
 

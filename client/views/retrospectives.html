@@ -62,75 +62,85 @@
             <h3 style="text-align: center;">TEAM "{{name}}"</h3>
 
             <br clear="all"/>
-            <button id="newRetrospective" class="btn btn-blue">New Retrospective</button>
-            <br clear="all"/>
 
-            <div id="retrospectivesPanel">
-
-                {{#each retrospectives}}
-                    <div class="retrospectivePost">
-                        <!--<h1 style="margin-right:10px">{{date}}</h1>  -->
-                        <div class="retrospectiveDate">
-                            <p>
-                                <span class="day">{{date}}</span>
-                            </p>
-                        </div>
-
-                        <div>
-
-                            <h3>{{description}}</h3>
-                            <br clear="all"/>
-
-                            <li class="UFIRow">
-                                <div class="UFIImageBlockContent">
-                                    <textarea class="UFIAddLessonLearnedInput {{_id}}">Add new Lesson Learned...</textarea>
-                                    <button type="submit" class="btn btn-blue addLessonLearned" retrospectiveId="{{_id}}" >Add</button>
-                                </div>
-                            </li>
-                            <br clear="all"/>
-                            <br clear="all"/>
-
-                            {{#each lessonlearned}}
-                                <li class="UFIRow">
-                                    <div class="clearfix">
-                                        <span style="margin-left: 2%;">{{description}}</span>
-                                    </div>
-                                    <br clear="all"/>
-                                </li>
-
-                                <li class="UFIRow">
-                                    <div class="lfloat">
-                                        <img class="img UFIActorImage" src="{{currentUserImage}}">
-                                    </div>
-                                    <div class="UFIImageBlockContent">
-                                        <textarea class="UFIAddCommentInput {{id}}">Scrivi un commento...</textarea>
-                                        <button type="submit" class="btn btn-blue addTopicComment" retrospectiveId="{{retrospectiveId}}" lessonlearnedId="{{id}}">Add Comment</button>
-                                    </div>
-                                </li>
-
-                                {{#each comments}}
-                                <li class="UFIRow">
-                                    <div class="clearfix">
-                                        <div class="lfloat">
-                                            <img class="img UFIActorImage" src="{{user}}">
-                                        </div>
-                                        <div class="UFIImageBlockContent">
-                                            <span style="margin-left: 2%;">{{text}}</span>
-                                        </div>
-                                    </div>
-                                </li>
-                                {{/each}}
-
-                                <br clear="all"/>
-                            {{/each}}
-                        </div>
-                    </div>
-
-                    <hr width="100%" color="#000000" noshade="false"/>
-                {{/each}}
+            {{#if isScrumMaster}}
+            <div>
+                <button id="newRetrospective" class="btn btn-blue">New Retrospective</button>
             </div>
+            <br clear="all"/>
+            {{/if}}
+
+            {{> retrospectivesList}}
         </div>
     </div>
 
     {{/with}}
+</template>
+
+<template name="retrospectivesList">
+    <div id="retrospectivesPanel">
+
+        {{#each retrospectives}}
+        <div class="retrospectivePost">
+            <!--<h1 style="margin-right:10px">{{date}}</h1>  -->
+            <div class="retrospectiveDate">
+                <p>
+                    <span class="day">{{date}}</span>
+                </p>
+            </div>
+
+            <div>
+
+                <h3>{{description}}</h3>
+                <br clear="all"/>
+
+                <li class="UFIRow">
+                    <div class="UFIImageBlockContent">
+                        <textarea class="UFIAddLessonLearnedInput {{_id}}">Add new Lesson Learned...</textarea>
+                        <button type="submit" class="btn btn-blue addLessonLearned" retrospectiveId="{{_id}}" >Add</button>
+                    </div>
+                </li>
+                <br clear="all"/>
+                <br clear="all"/>
+
+                {{#each lessonlearned}}
+                <li class="UFIRow">
+                    <div class="clearfix">
+                        <span style="margin-left: 2%;">{{description}}</span>
+                    </div>
+                    <br clear="all"/>
+                </li>
+
+                <li class="UFIRow">
+                    <div class="lfloat">
+                        <img class="img UFIActorImage" src="{{currentUserImage}}">
+                    </div>
+                    <div class="UFIImageBlockContent">
+                        <textarea class="UFIAddCommentInput {{id}}">Scrivi un commento...</textarea>
+                        <button type="submit" class="btn btn-blue addTopicComment" retrospectiveId="{{retrospectiveId}}" lessonlearnedId="{{id}}">Add Comment</button>
+                    </div>
+                </li>
+
+                {{#each comments}}
+                <li class="UFIRow">
+                    <div class="clearfix">
+                        <div class="lfloat">
+                            <img class="img UFIActorImage" src="{{user}}">
+                        </div>
+                        <div class="UFIImageBlockContent">
+                            <span style="margin-left: 2%;">{{text}}</span>
+                        </div>
+                    </div>
+                </li>
+                {{/each}}
+
+                <br clear="all"/>
+                {{/each}}
+            </div>
+        </div>
+
+        <hr width="100%" color="#000000" noshade="false"/>
+        {{/each}}
+    </div>
+
 </template>
