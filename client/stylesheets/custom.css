@@ -278,3 +278,17 @@
     zoom: 1;
 }
 /************** END - RETROSPECTIVES PAGE **************/
+
+/************** ADMIN PAGE **************/
+.selectMultiBox {
+    float:left;
+    text-align: center;
+    margin: 10px;
+}
+.selectMultiBox select {
+    width: auto;
+    min-width: 200px;
+    height: auto;
+    min-height: 200px;
+}
+/************** END - ADMIN PAGE **************/

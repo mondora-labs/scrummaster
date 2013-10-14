@@ -3,6 +3,7 @@ DailyScrum = new Meteor.Collection('dailyscrum');
 InvitationToken = new Meteor.Collection('invitationToken');
 FriendsList = new Meteor.Collection('friendsList');
 Retrospectives = new Meteor.Collection('retrospectives');
+AdminUsers = new Meteor.Collection('adminUsers');
 
 
 if (Meteor.isServer) {
@@ -33,5 +34,9 @@ if (Meteor.isServer) {
 
   Meteor.publish( "retrospectives", function() {
     return Retrospectives.find();
+  });
+
+  Meteor.publish( "adminUsers", function() {
+    return AdminUsers.find();
   });
 }

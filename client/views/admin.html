@@ -1,0 +1,102 @@
+<template name="admin">
+
+    <div class="container-fluid">
+        <div class="row-fluid">
+
+            <div class="area-top clearfix">
+                <div class="pull-left header">
+                    <h3 class="title">
+                        <i class="icon-edit"></i>
+                        Administration Page
+                    </h3>
+                </div>
+
+                <ul class="inline pull-right sparkline-box">
+
+                    <li class="sparkline-row">
+                        <h4 class="blue"><span>Commits</span> 847</h4>
+                        <div class="sparkline big" data-color="blue"><!--4,5,3,1,0,10,9,3,0,4--></div>
+                    </li>
+
+                    <li class="sparkline-row">
+                        <h4 class="green"><span>Updates</span> 12</h4>
+                        <div class="sparkline big" data-color="green"><!--24,10,13,15,3,7,8,29,7,14,13,23--></div>
+                    </li>
+
+                    <li class="sparkline-row">
+                        <h4 class="red"><span>Pomodoros</span> 83 so far</h4>
+                        <div class="sparkline big"><!--4,,7,12,12,3,4,5,9,9--></div>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid padded">
+        <div class="row-fluid">
+
+            <!-- Breadcrumb line -->
+
+            <div id="breadcrumbs">
+                <div class="breadcrumb-button blue">
+                    <span class="breadcrumb-label"><i class="icon-home"></i> Home</span>
+                    <span class="breadcrumb-arrow"><span></span></span>
+                </div>
+
+
+
+                <div class="breadcrumb-button">
+          <span class="breadcrumb-label">
+            <i class="icon-edit"></i>Administration Page
+          </span>
+                    <span class="breadcrumb-arrow"><span></span></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container-fluid padded">
+        <div class="row-fluid">
+            {{> userAdminBlock}}
+        </div>
+    </div>
+
+</template>
+
+<template name="userAdminBlock">
+    <div class="selectMultiBox">
+        <label>ALL USERS</label>
+        <select multiple id="notAdminUsers">
+            {{#each notAdminUsers}}
+            <option value="{{_id}}">{{profile.name}} ({{profile.email}})</option>
+            {{/each}}
+        </select>
+        <a href="#" id="add">add &gt;&gt;</a>
+    </div>
+    <div class="selectMultiBox">
+        <label>ADMIN USERS</label>
+        <a href="#" id="remove">&lt;&lt; remove</a>
+        <select multiple id="adminUsers">
+            {{#each adminUsers}}
+            <option value="{{_id}}">{{profile.name}} ({{profile.email}})</option>
+            {{/each}}
+        </select>
+    </div>
+</template>
+
+<template name="notAtuhorized">
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="area-top clearfix">
+                <div class="pull-left header">
+                    <h3 class="title">
+                        <i class="icon-edit"></i>
+                        You're not authorized to access this page... Admin Privileges needed!!
+                    </h3>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

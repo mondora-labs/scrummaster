@@ -9,6 +9,20 @@ Meteor.Router.add({
             Session.set('currentProduct', product);	    }
     },*/
     '/': 'home',
+
+    /*  '/admin': {
+        to: 'admin'
+    },
+      */
+
+    '/admin': function() {
+        var adminUser = AdminUsers.findOne({userId : Meteor.userId()});
+        if (adminUser)
+            return 'admin';
+        else
+            return 'notAtuhorized';
+    },
+
     '/:product/team/:team': {
 		to: 'team',
 		and: function(product, team) {

@@ -225,6 +225,9 @@ function getDailyScrumListPerDay(date) {
         if (dayElement.tasks.length == 0)
             return null;
     }
+
+    else
+        return null;
     return dayElement;
 }
 

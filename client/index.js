@@ -29,15 +29,15 @@ Template.userloggedout.events({
        }
    });
 
-   Template.userloggedin.events({
-       "click #logout": function(e, tmpl) {
-           Meteor.logout(function(err) {
-               if(err) {
-                   //sow err message
-               } else {
-                   //show alert that says logged out
-                   //alert('logged out');
-               }
-           });
-       }
-   });
+Template.userloggedin.events({
+   "click #logout": function(e, tmpl) {
+       Meteor.logout(function(err) {
+           if(err) {
+               //show err message
+           } else {
+               //show alert that says logged out
+               //alert('logged out');
+           }
+       });
+   }
+});

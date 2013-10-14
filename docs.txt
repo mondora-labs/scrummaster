@@ -83,3 +83,6 @@ var selectedUserId = "henXgdno47ERaQCF8";
 var userProfile = Meteor.users.findOne({_id:selectedUserId}).profile;
 userProfile.isSpeaking = true;  //or null
 Meteor.users.update( {_id: selectedUserId} , {$set:{profile: userProfile}} );
+
+==
+AdminUsers.insert({userId:Meteor.userId()})
