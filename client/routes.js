@@ -20,7 +20,7 @@ Meteor.Router.add({
         if (adminUser)
             return 'admin';
         else
-            return 'notAtuhorized';
+            return 'notAuthorized';
     },
 
     '/:product/team/:team': {

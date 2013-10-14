@@ -16,37 +16,33 @@ function getUsersByAdminAttribute(admin) {
     // admin == false --> voglio la lista degli utenti non admin
 
     var usersList = new Array();
-    try {
-        var adminUsers = AdminUsers.find().fetch();
-        var adminUserIds = new Array();
+    var adminUsers = AdminUsers.find().fetch();
+    var adminUserIds = new Array();
 
-        for (var j=0; j<adminUsers.length; j++){
-            adminUserIds.push(adminUsers[j].userId);
+    for (var j=0; j<adminUsers.length; j++){
+        adminUserIds.push(adminUsers[j].userId);
+    }
+
+    if (admin == true) {
+        for (var i=0; i<adminUserIds.length; i++){
+            var tmpUser = Meteor.users.findOne({_id : adminUserIds[i]});
+            if (tmpUser)
+                usersList.push(tmpUser);
         }
+    }
 
-        if (admin == true) {
-            for (var i=0; i<adminUserIds.length; i++){
-                var tmpUser = Meteor.users.findOne({_id : adminUserIds[i]});
+    else {
+        var allUsers = Meteor.users.find().fetch();
+        for (var i=0; i<allUsers.length; i++) {
+            var index = $.inArray(allUsers[i]._id, adminUserIds);
+            if (index == -1) {
+                var tmpUser = Meteor.users.findOne({_id : allUsers[i]._id});
                 if (tmpUser)
                     usersList.push(tmpUser);
             }
         }
-
-    else {
-            var allUsers = Meteor.users.find().fetch();
-            for (var i=0; i<allUsers.length; i++) {
-                var index = $.inArray(allUsers[i]._id, adminUserIds);
-                if (index == -1) {
-                    var tmpUser = Meteor.users.findOne({_id : allUsers[i]._id});
-                    if (tmpUser)
-                        usersList.push(tmpUser);
-                }
-            }
-        }
     }
-    catch (e) {
 
-    }
     return usersList;
 }
 
@@ -103,5 +99,157 @@ Template.header.helpers ({
             return null;
     }
 });
+
+
+
+Template.creationProdTeamBlock.rendered = function(){
+
+    var name = $( "#name" ),
+        slug = $( "#slug" ),
+        allFields = $( [] ).add( name ).add( slug ),
+        tips = $( ".validateTips" );
+
+    function updateTips( t ) {
+        tips
+            .text( t )
+            .addClass( "ui-state-highlight" );
+        setTimeout(function() {
+            tips.removeClass( "ui-state-highlight", 1500 );
+        }, 500 );
+    }
+
+    function checkRequired( o, n ) {
+        if ( o.val().length <= 0 ) {
+            o.addClass( "ui-state-error" );
+            updateTips( "Field '" + n + "' is required." );
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    function checkFieldAreadyInUse( o, n ) {
+
+        var slugDesc = o.val();
+        var productElement = Products.findOne({slug:slugDesc});
+
+        if (productElement != null){
+            o.addClass( "ui-state-error" );
+            updateTips( "Value '"+o.val()+"' for Field '" + n + "' is already in use." );
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    $( "#new-product" ).dialog({
+        autoOpen: false,
+        height: 300,
+        width: 350,
+        modal: true,
+        buttons: {
+            "Create a product": function() {
+                var bValid = true;
+                allFields.removeClass( "ui-state-error" );
+
+                bValid = bValid && checkRequired( name, "product name" );
+                bValid = bValid && checkRequired( slug, "product slug" );
+
+                if (bValid)
+                    bValid = bValid && checkFieldAreadyInUse( slug, "product slug" );
+
+                if ( bValid ) {
+                    try {
+                        Products.insert( {
+                            name: name.val(),
+                            slug: slug.val()
+                        });
+                  //      alert('name '+name.val()+', slug '+slug.val());
+                        $.pnotify({
+                            title: 'Success!',
+                            text: '\nProduct '+name.val()+' successfully created!',
+                            type: 'success',
+                            hide: false
+                        });
+                    }
+                    catch (err) {
+                        $.pnotify({
+                            title: 'Error!',
+                            text: '\nProblem while creating product '+ name.val() +'\n'+((err.message) ? err.message : ''),
+                            type: 'error',
+                            hide: false
+                        });
+                    }
+                    $( this ).dialog( "close" );
+                }
+            },
+            Cancel: function() {
+                $( this ).dialog( "close" );
+            }
+        },
+        close: function() {
+            allFields.val( "" ).removeClass( "ui-state-error" );
+        }
+    });
+
+    $( "#new-team" ).dialog({
+        autoOpen: false,
+        height: 400,
+        width: 450,
+        modal: true,
+        buttons: {
+            "Create a Team": function() {
+                var bValid = true;
+                allFields.removeClass( "ui-state-error" );
+
+               /* bValid = bValid && checkRequired( name, "product name" );
+                bValid = bValid && checkRequired( slug, "product slug" );
+
+                if (bValid)
+                    bValid = bValid && checkFieldAreadyInUse( slug, "product slug" );
+                */
+                if ( bValid ) {
+                    try {
+                       /* Products.insert( {
+                            name: name.val(),
+                            slug: slug.val()
+                        }); */
+                        //      alert('name '+name.val()+', slug '+slug.val());
+                        $.pnotify({
+                            title: 'Success!',
+                            text: '\Team '+name.val()+' successfully created!',
+                            type: 'success',
+                            hide: false
+                        });
+                    }
+                    catch (err) {
+                        $.pnotify({
+                            title: 'Error!',
+                            text: '\nProblem while creating Team '+ name.val() +'\n'+((err.message) ? err.message : ''),
+                            type: 'error',
+                            hide: false
+                        });
+                    }
+                    $( this ).dialog( "close" );
+                }
+            },
+            Cancel: function() {
+                $( this ).dialog( "close" );
+            }
+        },
+        close: function() {
+            allFields.val( "" ).removeClass( "ui-state-error" );
+        }
+    });
+
+    $( "#newProductBtn" ).button().click(function() {
+        $( "#new-product" ).dialog( "open" );
+    });
+
+    $( "#newTeamBtn" ).button().click(function() {
+        $( "#new-team" ).dialog( "open" );
+    });
+}
+
 
 

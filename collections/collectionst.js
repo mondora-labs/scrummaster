@@ -4,6 +4,7 @@ InvitationToken = new Meteor.Collection('invitationToken');
 FriendsList = new Meteor.Collection('friendsList');
 Retrospectives = new Meteor.Collection('retrospectives');
 AdminUsers = new Meteor.Collection('adminUsers');
+UsersSpeaking = new Meteor.Collection('usersSpeaking');
 
 
 if (Meteor.isServer) {
@@ -38,5 +39,9 @@ if (Meteor.isServer) {
 
   Meteor.publish( "adminUsers", function() {
     return AdminUsers.find();
+  });
+
+  Meteor.publish( "usersSpeaking", function() {
+    return UsersSpeaking.find();
   });
 }

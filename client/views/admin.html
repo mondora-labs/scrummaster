@@ -60,6 +60,12 @@
     <div class="container-fluid padded">
         <div class="row-fluid">
             {{> userAdminBlock}}
+
+            <br clear="all"/>
+            <hr width="100%" color="#000000" noshade="false"/>
+            <br clear="all"/>
+
+            {{> creationProdTeamBlock}}
         </div>
     </div>
 
@@ -86,7 +92,46 @@
     </div>
 </template>
 
-<template name="notAtuhorized">
+
+<template name="creationProdTeamBlock">
+    <div class="lfloat">
+        <button id="newProductBtn" class="btn btn-blue">New Product</button>
+        <br clear="all"/>
+        <br clear="all"/>
+    <!--    <button id="newTeamBtn" class="btn btn-blue">New Team</button>      -->
+    </div>
+
+    <div id="new-product" title="Create new Product">
+        <p class="validateTips">All form fields are required.</p>
+        <form>
+            <fieldset>
+                <label for="name">Product Name</label>
+                <input type="text" name="name" id="name" class="text ui-widget-content ui-corner-all" />
+                <label for="slug">Product Slug</label>
+                <input type="text" name="slug" id="slug" value="" class="text ui-widget-content ui-corner-all" />
+            </fieldset>
+        </form>
+    </div>
+
+    <div id="new-team" title="Create new Team">
+        <p class="validateTeamTips"></p>
+        <form>
+            <fieldset>
+                <label for="teamName">Team Name</label>
+                <input type="text" name="teamName" id="teamName" class="text ui-widget-content ui-corner-all" />
+                <label for="TeamSlug">Team Slug</label>
+                <input type="text" name="teamSlug" id="teamSlug" value="" class="text ui-widget-content ui-corner-all" />
+                <label for="slug">Motto</label>
+                <input type="text" name="teamMotto" id="teamMotto" value="" class="text ui-widget-content ui-corner-all" />
+                <label for="slug">Picture</label>
+                <input type="text" name="teamMotto" id="teamPicture" value="" class="text ui-widget-content ui-corner-all" />
+            </fieldset>
+        </form>
+    </div>
+</template>
+
+
+<template name="notAuthorized">
     <div class="container-fluid">
         <div class="row-fluid">
             <div class="area-top clearfix">

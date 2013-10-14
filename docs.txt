@@ -86,3 +86,10 @@ Meteor.users.update( {_id: selectedUserId} , {$set:{profile: userProfile}} );
 
 ==
 AdminUsers.insert({userId:Meteor.userId()})
+
+==
+UsersSpeaking.insert( {
+                    product_slug: "matutorbis",
+                    team_slug: "moschettieri",
+                    userId: "henXgdno47ERaQCF8";
+                    });

@@ -1,4 +1,5 @@
 Meteor.subscribe('dailyscrum');
+Meteor.subscribe('usersSpeaking');
 
 var tmpDudePicture = "https://lh4.googleusercontent.com/-77wocJdaiXg/AAAAAAAAAAI/AAAAAAAAAAA/NN3q52w3EXQ/s48-c/photo.jpg";
 var tmpDudeUserId = "";
@@ -33,10 +34,15 @@ function resetTimer(role, selectedUserId) {
     }
 
     if (role == 'SM') {
-        // quando si resetta il timer, viene resettato il flag isSpeaking dell'utente selezionato
-        var userProfile = Meteor.users.findOne({_id:selectedUserId}).profile;
-        userProfile.isSpeaking = null;
-        Meteor.users.update( {_id: selectedUserId} , {$set:{profile: userProfile}} );
+        // quando si resetta il timer, viene rimosso userSpeaking element
+        var userSpeaking = UsersSpeaking.findOne({
+                                                $and: [
+                                                    {product_slug: Session.get('currentProduct')},
+                                                    {team_slug: Session.get('currentTeam')}
+                                                ]
+                                            });
+        if (userSpeaking)
+            UsersSpeaking.remove(userSpeaking._id);
     }
     Session.set('dailyScrumUserId');
 
@@ -44,11 +50,14 @@ function resetTimer(role, selectedUserId) {
 
 function enableTimer(role, selectedUserId) {
 
-    // quando SM abilita il timer, setta il flag isSpeaking dell'utente selezionato
+    // quando SM abilita il timer, viene creato userSpeaking element
     if (role == 'SM') {
-        var userProfile = Meteor.users.findOne({_id:selectedUserId}).profile;
-        userProfile.isSpeaking = true;
-        Meteor.users.update( {_id: selectedUserId} , {$set:{profile: userProfile}} );
+
+        UsersSpeaking.insert( {
+            product_slug: "matutorbis",
+            team_slug: "moschettieri",
+            userId: selectedUserId
+        });
     }
 
     if (!isTimerWorking) {
@@ -232,15 +241,26 @@ function getDailyScrumListPerDay(date) {
 }
 
 function getUserIdActuallySpeaking () {
-    var userList = $('.user');
+
+    /*var userList = $('.user');
 
     for (var i=0; i<userList.length; i++) {
         var currentUser = Meteor.users.findOne({_id: userList[i].id});
         if (currentUser != null && currentUser.profile.isSpeaking != null){
             return currentUser._id;
         }
-    }
-    return null;
+    }    */
+
+    var userSpeaking = UsersSpeaking.findOne({
+                                        $and: [
+                                            {product_slug: Session.get('currentProduct')},
+                                            {team_slug: Session.get('currentTeam')}
+                                        ]
+                                            });
+
+    if (userSpeaking)
+        return userSpeaking.userId;
+    else return null;
 }
 
 Template.dailyscrum.rendered = function() {
@@ -265,8 +285,10 @@ Template.dailyscrum.rendered = function() {
             showDailyScrumPanel(selectedUserId);
             enableTimer('TM', selectedUserId);
         }
-        else
+        else {
             hideDailyScrumPanel();
+            resetTimer('TM', selectedUserId);
+        }
     }
 
 }
@@ -573,6 +595,15 @@ Template.dailyscrum.helpers ({
 
     isTeamMember : function() {
         return isTeamMember();
+    },
+
+    userActuallySpeaking: function() {
+        return UsersSpeaking.findOne({
+            $and: [
+                {product_slug: Session.get('currentProduct')},
+                {team_slug: Session.get('currentTeam')}
+            ]
+        });
     }
 });
 
