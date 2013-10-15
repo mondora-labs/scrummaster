@@ -41,3 +41,21 @@ Template.userloggedin.events({
        });
    }
 });
+
+Template.sidebar.helpers({
+    selectedProduct: function() {
+        var currentProduct = Session.get('currentProduct');
+        if (currentProduct)
+            return currentProduct;
+        else
+            return 'notFound' ;
+    },
+
+    selectedTeam: function() {
+        var currentTeam = Session.get('currentTeam');
+        if (currentTeam)
+            return currentTeam;
+        else
+            return 'notFound';
+    }
+});

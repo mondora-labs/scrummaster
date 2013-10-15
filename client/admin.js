@@ -11,6 +11,14 @@ Meteor.loginAsAdmin = function(password, callback) {
   });
 };
 
+function isCurrentUserAdmin() {
+    var adminUser = AdminUsers.findOne({userId : Meteor.userId()});
+    if (adminUser)
+        return true;
+    else
+        return null;
+}
+
 function getUsersByAdminAttribute(admin) {
     // admin == true  --> voglio la lista degli utenti admin
     // admin == false --> voglio la lista degli utenti non admin
@@ -44,6 +52,28 @@ function getUsersByAdminAttribute(admin) {
     }
 
     return usersList;
+}
+
+function insertTeam (product, teamName, teamSlug, teamMotto, teamPicture) {
+
+    var product = Products.findOne({slug: product}) ;
+
+    if (product) {
+        var tmpTeam = {};
+        tmpTeam.name = teamName;
+        tmpTeam.slug = teamSlug;
+        tmpTeam.motto = teamMotto;
+        tmpTeam.picture = teamPicture;
+        tmpTeam.members =  [];
+
+        var teamList = product.team;
+        teamList.push(tmpTeam) ;
+        Products.update( {_id: product._id} , {$set:{team: teamList}} );
+
+    }
+    else {
+        throw "Product not found!" ;
+    }
 }
 
 Template.userAdminBlock.rendered = function() {
@@ -92,24 +122,31 @@ Template.userAdminBlock.helpers ({
 Template.header.helpers ({
 
     isUserAdmin : function () {
-        var adminUser = AdminUsers.findOne({userId : Meteor.userId()});
-        if (adminUser)
-            return true;
-        else
-            return null;
+        return isCurrentUserAdmin();
+    }
+});
+
+Template.team.helpers ({
+    isUserAdmin : function () {
+        return isCurrentUserAdmin();
+    }
+});
+
+Template.userTeam.helpers ({
+    isUserAdmin : function () {
+        return isCurrentUserAdmin();
     }
 });
 
 
-
 Template.creationProdTeamBlock.rendered = function(){
 
-    var name = $( "#name" ),
-        slug = $( "#slug" ),
-        allFields = $( [] ).add( name ).add( slug ),
-        tips = $( ".validateTips" );
+    var prodName = $( "#name" ),
+        prodSlug = $( "#slug" ),
+        prodAllFields = $( [] ).add( prodName ).add( prodSlug ),
+        productTips = $( ".validateProductTips" );
 
-    function updateTips( t ) {
+    function updateTips( t, tips ) {
         tips
             .text( t )
             .addClass( "ui-state-highlight" );
@@ -118,24 +155,24 @@ Template.creationProdTeamBlock.rendered = function(){
         }, 500 );
     }
 
-    function checkRequired( o, n ) {
+    function checkRequired( o, n, tips ) {
         if ( o.val().length <= 0 ) {
             o.addClass( "ui-state-error" );
-            updateTips( "Field '" + n + "' is required." );
+            updateTips( "Field '" + n + "' is required.", tips );
             return false;
         } else {
             return true;
         }
     }
 
-    function checkFieldAreadyInUse( o, n ) {
+    function checkProductSlugAlreadyInUse( o, n , tips) {
 
         var slugDesc = o.val();
         var productElement = Products.findOne({slug:slugDesc});
 
         if (productElement != null){
             o.addClass( "ui-state-error" );
-            updateTips( "Value '"+o.val()+"' for Field '" + n + "' is already in use." );
+            updateTips( "Value '"+o.val()+"' for Field '" + n + "' is already in use." , tips);
             return false;
         } else {
             return true;
@@ -150,24 +187,25 @@ Template.creationProdTeamBlock.rendered = function(){
         buttons: {
             "Create a product": function() {
                 var bValid = true;
-                allFields.removeClass( "ui-state-error" );
+                prodAllFields.removeClass( "ui-state-error" );
 
-                bValid = bValid && checkRequired( name, "product name" );
-                bValid = bValid && checkRequired( slug, "product slug" );
+                bValid = bValid && checkRequired( prodName, "product name", productTips );
+                bValid = bValid && checkRequired( prodSlug, "product slug", productTips );
 
                 if (bValid)
-                    bValid = bValid && checkFieldAreadyInUse( slug, "product slug" );
+                    bValid = bValid && checkProductSlugAlreadyInUse( prodSlug, "product slug", productTips );
 
                 if ( bValid ) {
                     try {
                         Products.insert( {
-                            name: name.val(),
-                            slug: slug.val()
+                            name: prodName.val(),
+                            slug: prodSlug.val(),
+                            team:[]
                         });
-                  //      alert('name '+name.val()+', slug '+slug.val());
+                  //      alert('name '+prodName.val()+', slug '+prodSlug.val());
                         $.pnotify({
                             title: 'Success!',
-                            text: '\nProduct '+name.val()+' successfully created!',
+                            text: '\nProduct '+prodName.val()+' successfully created!',
                             type: 'success',
                             hide: false
                         });
@@ -175,7 +213,7 @@ Template.creationProdTeamBlock.rendered = function(){
                     catch (err) {
                         $.pnotify({
                             title: 'Error!',
-                            text: '\nProblem while creating product '+ name.val() +'\n'+((err.message) ? err.message : ''),
+                            text: '\nProblem while creating product '+ prodName.val() +'\n'+((err.message) ? err.message : ''),
                             type: 'error',
                             hide: false
                         });
@@ -188,28 +226,35 @@ Template.creationProdTeamBlock.rendered = function(){
             }
         },
         close: function() {
-            allFields.val( "" ).removeClass( "ui-state-error" );
+            prodAllFields.val( "" ).removeClass( "ui-state-error" );
         }
     });
 
+    var productCombo = $("#chooseProductCombo"),
+        teamName = $( "#teamName" ),
+        teamSlug = $( "#teamSlug" ),
+        teamMotto = $( "#teamMotto" ),
+        teamPicture = $( "#teamPicture" ),
+        teamAllFields = $( []).add(productCombo).add( teamName ).add( teamSlug).add( teamMotto).add( teamPicture),
+        teamTips = $( ".validateTeamTips" );
+
     $( "#new-team" ).dialog({
         autoOpen: false,
-        height: 400,
+        height: 450,
         width: 450,
         modal: true,
         buttons: {
             "Create a Team": function() {
                 var bValid = true;
-                allFields.removeClass( "ui-state-error" );
+                teamAllFields.removeClass( "ui-state-error" );
 
-               /* bValid = bValid && checkRequired( name, "product name" );
-                bValid = bValid && checkRequired( slug, "product slug" );
+                bValid = bValid && checkRequired( productCombo, "Product", teamTips );
+                bValid = bValid && checkRequired( teamName, "Team Name", teamTips );
+                bValid = bValid && checkRequired( teamSlug, "Team Slug", teamTips );
 
-                if (bValid)
-                    bValid = bValid && checkFieldAreadyInUse( slug, "product slug" );
-                */
                 if ( bValid ) {
                     try {
+                        insertTeam (productCombo.val(),teamName.val(),teamSlug.val(),teamMotto.val(),teamPicture.val());
                        /* Products.insert( {
                             name: name.val(),
                             slug: slug.val()
@@ -217,7 +262,7 @@ Template.creationProdTeamBlock.rendered = function(){
                         //      alert('name '+name.val()+', slug '+slug.val());
                         $.pnotify({
                             title: 'Success!',
-                            text: '\Team '+name.val()+' successfully created!',
+                            text: '\Team '+teamName.val()+' successfully created!',
                             type: 'success',
                             hide: false
                         });
@@ -225,7 +270,7 @@ Template.creationProdTeamBlock.rendered = function(){
                     catch (err) {
                         $.pnotify({
                             title: 'Error!',
-                            text: '\nProblem while creating Team '+ name.val() +'\n'+((err.message) ? err.message : ''),
+                            text: '\nProblem while creating Team '+ teamName.val() +'\n'+((err.message) ? err.message : ''),
                             type: 'error',
                             hide: false
                         });
@@ -238,7 +283,7 @@ Template.creationProdTeamBlock.rendered = function(){
             }
         },
         close: function() {
-            allFields.val( "" ).removeClass( "ui-state-error" );
+            teamAllFields.val( "" ).removeClass( "ui-state-error" );
         }
     });
 

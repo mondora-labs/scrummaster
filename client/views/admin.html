@@ -61,9 +61,7 @@
         <div class="row-fluid">
             {{> userAdminBlock}}
 
-            <br clear="all"/>
             <hr width="100%" color="#000000" noshade="false"/>
-            <br clear="all"/>
 
             {{> creationProdTeamBlock}}
         </div>
@@ -94,15 +92,67 @@
 
 
 <template name="creationProdTeamBlock">
+
     <div class="lfloat">
-        <button id="newProductBtn" class="btn btn-blue">New Product</button>
-        <br clear="all"/>
-        <br clear="all"/>
-    <!--    <button id="newTeamBtn" class="btn btn-blue">New Team</button>      -->
+
+        <!-- PRODUCTS -->
+        <div id="users-contain" class="ui-widget">
+            <h1>Existing Products:</h1>
+            <table id="products" class="ui-widget ui-widget-content">
+                <thead>
+                <tr class="ui-widget-header ">
+                    <th>Name</th>
+                    <th>Slug</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{#each productsList}}
+                <tr>
+                    <td>{{name}}</td>
+                    <td>{{slug}}</td>
+                </tr>
+                {{/each}}
+                </tbody>
+            </table>
+            <br clear="all"/>
+            <button id="newProductBtn" class="btn btn-blue">New Product</button>
+        </div>
+
+        <hr width="100%" color="#000000" noshade="false"/>
+
+        <!-- TEAM -->
+        <div id="users-contain" class="ui-widget">
+            <h1>Existing Teams:</h1>
+            <table id="users" class="ui-widget ui-widget-content">
+                <thead>
+                <tr class="ui-widget-header ">
+                    <th>Product</th>
+                    <th>Team Name</th>
+                    <th>Team Slug</th>
+                    <th>Team Motto</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{#each teamsList}}
+                <tr>
+                    <td>{{productName}}</td>
+                    {{#with team}}
+                    <td>{{name}}</td>
+                    <td>{{slug}}</td>
+                    <td>{{motto}}</td>
+                    {{/with}}
+                </tr>
+                {{/each}}
+                </tbody>
+            </table>
+            <br clear="all"/>
+            <button id="newTeamBtn" class="btn btn-blue">New Team</button>
+        </div>
+
     </div>
 
     <div id="new-product" title="Create new Product">
-        <p class="validateTips">All form fields are required.</p>
+        <p class="validateTips validateProductTips">All form fields are required.</p>
         <form>
             <fieldset>
                 <label for="name">Product Name</label>
@@ -114,9 +164,17 @@
     </div>
 
     <div id="new-team" title="Create new Team">
-        <p class="validateTeamTips"></p>
+        <p class="validateTips validateTeamTips"></p>
         <form>
             <fieldset>
+                <label for="chooseProductCombo">Product Name</label>
+                <select id="chooseProductCombo" class="easyui-combobox" name="dept" style="width:200px;">
+                    <option value="" selected="true">Choose a product...</option>
+                    {{#each productsList}}
+                    <option value="{{slug}}">{{name}}</option>
+                    {{/each}}
+                </select>
+
                 <label for="teamName">Team Name</label>
                 <input type="text" name="teamName" id="teamName" class="text ui-widget-content ui-corner-all" />
                 <label for="TeamSlug">Team Slug</label>

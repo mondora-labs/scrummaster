@@ -2,18 +2,7 @@
 
 Meteor.Router.add({
 
-  /*  '/:product/dailyscrum/:team': {
-		to: 'dailyscrum',
-		and: function(id) {
-            Session.set('currentTeam', team);
-            Session.set('currentProduct', product);	    }
-    },*/
     '/': 'home',
-
-    /*  '/admin': {
-        to: 'admin'
-    },
-      */
 
     '/admin': function() {
         var adminUser = AdminUsers.findOne({userId : Meteor.userId()});

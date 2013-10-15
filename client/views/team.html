@@ -118,7 +118,11 @@
             </div>
           </div>
           <div class="form-actions">
-            <button type="submit" class="btn btn-blue sendMail">Update and invite</button>
+              {{#if isUserAdmin}}
+              <button type="submit" class="btn btn-blue sendMail">Update and invite</button>
+              {{else}}
+              <button type="submit" disabled="true" class="btn btn-blue sendMail">Update and invite</button>
+              {{/if}}
    <!--         <button type="button" class="btn btn-default">Cancel</button>    -->
           </div>
         </form>
@@ -178,7 +182,9 @@
     {{#if scrummaster}}
         <li><img class="menu-avatar" src="{{profile.picture}}">
             <a href="/user/{{_id}}"> {{profile.name}} (Scrum Master)</a>
+            {{#if isUserAdmin}}
             <button type="button" class="btn btn-blue" id="deleteSM" style="float:right">Delete</button>
+            {{/if}}
         </li>
     {{/if}}
     {{/with}}
@@ -187,7 +193,9 @@
     {{#if productowner}}
         <li><img class="menu-avatar" src="{{profile.picture}}">
             <a href="/user/{{_id}}"> {{profile.name}} (Product Owner)</a>
+            {{#if isUserAdmin}}
             <button type="button" class="btn btn-blue" id="deletePO" style="float:right">Delete</button>
+            {{/if}}
         </li>
     {{/if}}
     {{/with}}
@@ -195,7 +203,9 @@
     {{#each users}}
         <li><img class="menu-avatar" src="{{picture}}">
             <a href="/user/{{id}}"> {{name}}</a>
+            {{#if isUserAdmin}}
             <button type="button" class="btn btn-blue deleteTM" style="float:right" value="{{id}}">Delete</button>
+            {{/if}}
         </li>
     {{/each}}
 </template>

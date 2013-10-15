@@ -7,7 +7,7 @@
                 <div class="pull-left header">
                     <h3 class="title">
                         <i class="icon-edit"></i>
-                        Users List
+                        Products & Users List
                     </h3>
                     <h5>
                         Some info...
@@ -51,7 +51,7 @@
 
                 <div class="breadcrumb-button">
           <span class="breadcrumb-label">
-            <i class="icon-edit"></i> Users List
+            <i class="icon-edit"></i> Products & Users List
           </span>
                     <span class="breadcrumb-arrow"><span></span></span>
                 </div>
@@ -71,7 +71,9 @@
                         <li>
                             <fieldset style="border: solid 1px #ddd ! important; padding: 1.25em ! important;">
                                 <img width="100px" src="{{picture}}" alt="logo"/>
-                                <h3>{{name}}</h3>
+                                <h3>
+                                    <a href="/{{productSlug}}/team/{{slug}}">{{name}}</a>
+                                </h3>
                                 {{#each users}}
                                 <ul class="padded separate-sections">
                                     <li><img class="menu-avatar" src="{{profile.picture}}">

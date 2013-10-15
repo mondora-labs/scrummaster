@@ -4,6 +4,28 @@ function selectedProduct(){
     return Products.findOne( {slug: Session.get('currentProduct') } );
 }
 
+function getProductsList(){
+    return Products.find() ;
+}
+
+function getTeamsList() {
+    var products = getProductsList().fetch();
+    var teamsArray = new Array();
+    for (var i=0;i<products.length;i++) {
+        var currentProduct = products[i];
+        for (var j=0; j<currentProduct.team.length; j++) {
+            var tmpTeam = {};
+            tmpTeam.productName = currentProduct.name;
+            tmpTeam.productSlug = currentProduct.slug;
+            tmpTeam.team = currentProduct.team[j];
+
+            teamsArray.push(tmpTeam);
+        }
+    }
+
+    return teamsArray;
+}
+
 function selectedTeam() {
     var product = selectedProduct();
     if (product) {
@@ -134,6 +156,18 @@ Template.matchToken.helpers({
     teamInfo: function() {
         return selectedTeam() ;
     }
+});
+
+Template.creationProdTeamBlock.helpers({
+    productsList: function() {
+        return getProductsList() ;
+    },
+
+    teamsList: function() {
+        return getTeamsList() ;
+    }
+
+
 });
 
 

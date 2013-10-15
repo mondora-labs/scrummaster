@@ -43,6 +43,9 @@ function getUsersListPerProducts(){
 
             products[i].team[j].users = new Array();
 
+            // questa variabile serve per creare il link che rimanda alla pagina del team
+            products[i].team[j].productSlug = products[i].slug;
+
             // recupero SM e Po
             if (products[i].scrummaster && products[i].scrummaster != ''){
                 var sm = Meteor.users.findOne({'_id':products[i].scrummaster});
