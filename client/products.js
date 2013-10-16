@@ -16,8 +16,8 @@ function getTeamsList() {
         for (var j=0; j<currentProduct.team.length; j++) {
             var tmpTeam = {};
             tmpTeam.productName = currentProduct.name;
-            tmpTeam.productSlug = currentProduct.slug;
             tmpTeam.team = currentProduct.team[j];
+            tmpTeam.team.productSlug = currentProduct.slug;
 
             teamsArray.push(tmpTeam);
         }

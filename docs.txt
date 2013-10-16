@@ -93,3 +93,10 @@ UsersSpeaking.insert( {
                     team_slug: "moschettieri",
                     userId: "henXgdno47ERaQCF8";
                     });
+
+==
+Canvas.insert( {
+                    product_slug: "matutorbis",
+                    team_slug: "moschettieri",
+                    dataUrl: "";
+                    });

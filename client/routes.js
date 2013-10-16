@@ -4,6 +4,14 @@ Meteor.Router.add({
 
     '/': 'home',
 
+    '/:product/dashboard/:team': {
+        to: 'dashboard',
+        and: function(product, team) {
+            Session.set('currentTeam', team);
+            Session.set('currentProduct', product);
+        }
+    },
+
     '/admin': function() {
         var adminUser = AdminUsers.findOne({userId : Meteor.userId()});
         if (adminUser)

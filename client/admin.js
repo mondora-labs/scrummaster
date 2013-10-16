@@ -260,6 +260,20 @@ Template.creationProdTeamBlock.rendered = function(){
                             slug: slug.val()
                         }); */
                         //      alert('name '+name.val()+', slug '+slug.val());
+
+                        $( "#teams tbody" ).append( "<tr>" +
+                            "<td>" + productCombo.val() + "</td>" +
+                            "<td>" + teamName.val() + "</td>" +
+                            "<td>" + teamSlug.val() + "</td>" +
+                            "<td>" + teamMotto.val() + "</td>" +
+                            "<td>" +
+                                "<button class='btn btn-blue deleteTeamBtn  ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only' teamSlug='"+teamSlug.val()+"' productSlug='"+productCombo.val()+"'>"+
+                                    "<span class='ui-button-text'>Delete</span>" +
+                                "</button> "+
+                            "</td>" +
+                            "</tr>" );
+
+
                         $.pnotify({
                             title: 'Success!',
                             text: '\Team '+teamName.val()+' successfully created!',
@@ -294,7 +308,33 @@ Template.creationProdTeamBlock.rendered = function(){
     $( "#newTeamBtn" ).button().click(function() {
         $( "#new-team" ).dialog( "open" );
     });
+
+
+    $( ".deleteTeamBtn" ).button().click(function() {
+        var returnConfirm = confirm('Questa operazione eliminerà il team corrente, e le relative retrospettive e dailyscrum. \nSei sicuro di voler continuare?');
+
+        if (returnConfirm == false)
+            return false;
+
+        else {
+
+            var productSlug, teamSlug;
+
+            // questo if serve a gestire il click sullo span o sul button
+            if (event.target.nodeName == 'SPAN') {
+                productSlug = $(event.target.parentElement).attr('productSlug');
+                teamSlug = $(event.target.parentElement).attr('teamSlug');
+            }
+            else {
+                var productSlug = $(event.target).attr('productSlug');
+                var teamSlug = $(event.target).attr('teamSlug');
+            }
+
+            // TODO - oltre al team, devo rimuovere anche dailyscrum e retrospettiva?
+
+            alert (productSlug+' '+teamSlug);
+            return false;
+        }
+    });
 }
-
-
 

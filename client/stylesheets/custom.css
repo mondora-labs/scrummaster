@@ -308,9 +308,23 @@
 
 fieldset { padding:0; border:0; margin-top:25px; }
 h1 { font-size: 1.2em; margin: .6em 0; }
-div#products-contain { width: 350px; margin: 20px 0; }
+div#products-contain { /*width: 350px; */ margin: 20px 0; }
 div#products-contain table { margin: 1em 0; border-collapse: collapse; width: 100%; }
 div#products-contain table td, div#products-contain table th { border: 1px solid #eee; padding: .6em 10px; text-align: left; }
+
+div#team-contain { /*width: 350px; */ margin: 20px 0; }
+div#team-contain table { margin: 1em 0; border-collapse: collapse; width: 100%; }
+div#team-contain table td, div#team-contain table th { border: 1px solid #eee; padding: .6em 10px; text-align: left; }
+
 .ui-dialog .ui-state-error { padding: .3em; }
 .validateTips { border: 1px solid transparent; padding: 0.3em; }
 /************** END - ADMIN PAGE **************/
+
+/************** DASHBOARD PAGE **************/
+#dash_canvas {
+    border: 1px solid #cdcdcd;
+}
+.canvasBtn {
+    margin-right: 10px;
+}
+/************** END - DASHBOARD PAGE **************/

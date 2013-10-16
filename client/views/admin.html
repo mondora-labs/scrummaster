@@ -96,7 +96,7 @@
     <div class="lfloat">
 
         <!-- PRODUCTS -->
-        <div id="users-contain" class="ui-widget">
+        <div id="products-contain" class="ui-widget">
             <h1>Existing Products:</h1>
             <table id="products" class="ui-widget ui-widget-content">
                 <thead>
@@ -121,15 +121,16 @@
         <hr width="100%" color="#000000" noshade="false"/>
 
         <!-- TEAM -->
-        <div id="users-contain" class="ui-widget">
+        <div id="team-contain" class="ui-widget">
             <h1>Existing Teams:</h1>
-            <table id="users" class="ui-widget ui-widget-content">
+            <table id="teams" class="ui-widget ui-widget-content">
                 <thead>
                 <tr class="ui-widget-header ">
                     <th>Product</th>
                     <th>Team Name</th>
                     <th>Team Slug</th>
                     <th>Team Motto</th>
+                    <th/>
                 </tr>
                 </thead>
                 <tbody>
@@ -140,6 +141,9 @@
                     <td>{{name}}</td>
                     <td>{{slug}}</td>
                     <td>{{motto}}</td>
+                    <td>
+                        <button class="btn btn-blue deleteTeamBtn" teamSlug="{{slug}}" productSlug="{{productSlug}}">Delete</button>
+                    </td>
                     {{/with}}
                 </tr>
                 {{/each}}
@@ -156,9 +160,9 @@
         <form>
             <fieldset>
                 <label for="name">Product Name</label>
-                <input type="text" name="name" id="name" class="text ui-widget-content ui-corner-all" />
+                <input type="text" id="name" class="text ui-widget-content ui-corner-all" />
                 <label for="slug">Product Slug</label>
-                <input type="text" name="slug" id="slug" value="" class="text ui-widget-content ui-corner-all" />
+                <input type="text" id="slug" value="" class="text ui-widget-content ui-corner-all" />
             </fieldset>
         </form>
     </div>
@@ -176,13 +180,13 @@
                 </select>
 
                 <label for="teamName">Team Name</label>
-                <input type="text" name="teamName" id="teamName" class="text ui-widget-content ui-corner-all" />
+                <input type="text" id="teamName" class="text ui-widget-content ui-corner-all" />
                 <label for="TeamSlug">Team Slug</label>
-                <input type="text" name="teamSlug" id="teamSlug" value="" class="text ui-widget-content ui-corner-all" />
+                <input type="text" id="teamSlug" value="" class="text ui-widget-content ui-corner-all" />
                 <label for="slug">Motto</label>
-                <input type="text" name="teamMotto" id="teamMotto" value="" class="text ui-widget-content ui-corner-all" />
+                <input type="text" id="teamMotto" value="" class="text ui-widget-content ui-corner-all" />
                 <label for="slug">Picture</label>
-                <input type="text" name="teamMotto" id="teamPicture" value="" class="text ui-widget-content ui-corner-all" />
+                <input type="text" id="teamPicture" value="" class="text ui-widget-content ui-corner-all" />
             </fieldset>
         </form>
     </div>
