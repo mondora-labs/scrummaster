@@ -318,21 +318,51 @@ Template.creationProdTeamBlock.rendered = function(){
 
         else {
 
-            var productSlug, teamSlug;
+            var productSlug, teamSlug, divToRemove;
 
-            // questo if serve a gestire il click sullo span o sul button
-            if (event.target.nodeName == 'SPAN') {
-                productSlug = $(event.target.parentElement).attr('productSlug');
-                teamSlug = $(event.target.parentElement).attr('teamSlug');
+            productSlug = $(this).attr('productSlug');
+            teamSlug = $(this).attr('teamSlug');
+            divToRemove = this.parentElement.parentElement;
+
+
+            // rimuovo retrospettive associate a questo team
+            var retrospectiveArray = Retrospectives.find({
+                    $and: [
+                        {product_slug: productSlug},
+                        {team_slug: teamSlug}
+                    ]}).fetch();
+
+            for (var i=0; i<retrospectiveArray.length; i++){
+                Retrospectives.remove(retrospectiveArray[i]._id);
             }
-            else {
-                var productSlug = $(event.target).attr('productSlug');
-                var teamSlug = $(event.target).attr('teamSlug');
+
+            // rimuovo dailyScrum associati a questo team
+            var dailyScrumArray = DailyScrum.find({
+                $and: [
+                    {product_slug: productSlug},
+                    {team_slug: teamSlug}
+                ]}).fetch();
+
+            for (var i=0; i<dailyScrumArray.length; i++){
+                DailyScrum.remove(dailyScrumArray[i]._id);
             }
 
-            // TODO - oltre al team, devo rimuovere anche dailyscrum e retrospettiva?
+            var tmpProduct = Products.findOne({slug: productSlug});
 
-            alert (productSlug+' '+teamSlug);
+            if (tmpProduct){
+                var teamArray = tmpProduct.team;
+
+                for (var i=0; i<teamArray.length; i++){
+                    if (teamArray[i].slug == teamSlug){
+                        teamArray.splice(i,1);
+                        Products.update( {_id: tmpProduct._id} , {$set:{team: teamArray}} );
+                        $(divToRemove).remove();
+                        break;
+                    }
+                }
+            }
+
+
             return false;
         }
     });

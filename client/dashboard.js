@@ -48,6 +48,8 @@ salvaCanvas = function(){
         dataUrl: ctx.canvas.toDataURL('image/png')
     });
 
+    Session.set('refreshPage','true');
+
     alert("Canvas salvato");
 }
 
@@ -82,8 +84,23 @@ Template.dashboard.rendered = function(){
     ctx = canvas.getContext("2d");
 
     recuperaCanvas();
+ //   Meteor.setTimeout(recuperaCanvas,1000);
 
 };
+
+Template.dashboard.helpers ({
+    refreshPage: function() {
+        Session.get('refreshPage');
+    },
+    canvasElement: function() {
+        Canvas.findOne({
+            $and: [
+                {product_slug: Session.get('currentProduct')},
+                {team_slug: Session.get('currentTeam')}
+            ]
+        });
+    }
+});
 
 Template.dashboard.events ({
 
