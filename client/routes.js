@@ -2,17 +2,24 @@
 
 Meteor.Router.add({
 
-    '/': 'home',
+    '/': {
+        to: 'home',
+        and: function() {
+            Session.set('selectedMenu');
+        }
+    },
 
     '/:product/dashboard/:team': {
         to: 'dashboard',
         and: function(product, team) {
             Session.set('currentTeam', team);
             Session.set('currentProduct', product);
+            Session.set('selectedMenu','dashboard');
         }
     },
 
     '/admin': function() {
+        Session.set('selectedMenu');
         var adminUser = AdminUsers.findOne({userId : Meteor.userId()});
         if (adminUser)
             return 'admin';
@@ -27,7 +34,9 @@ Meteor.Router.add({
 			Session.set('currentProduct', product);
             Session.set('onlyTodayDailyScrum',1);
             Session.set('onlyLastRetrospective',1);
-	    }
+            Session.set('selectedMenu');
+
+        }
 	},
 
     '/:product/joinTeam/:team': {
@@ -35,18 +44,25 @@ Meteor.Router.add({
         and: function(product, team) {
             Session.set('currentTeam', team);
             Session.set('currentProduct', product);
+            Session.set('selectedMenu');
+
         }
     },
 
    // gestione separata per pagina Users e pagina UserDetail
-    '/user/usersList': 'usersList',
+    '/user/usersList': {
+        to: 'usersList',
+        and: function() {
+            Session.set('selectedMenu');
+        }
+    },
 
     '/user/:id': {
         to: 'userDetail',
         and: function(id) {
             Session.set('userId',id);
+            Session.set('selectedMenu');
         }
-
     },
 
     '/:product/dailyscrum/:team': {
@@ -55,6 +71,7 @@ Meteor.Router.add({
             Session.set('currentTeam', team);
             Session.set('currentProduct', product);
             Session.set('onlyTodayDailyScrum',0);
+            Session.set('selectedMenu','dailyscrum');
 
             var role = getUserRoleForCurrentTeam(product, team);
             if (role != null)
@@ -68,6 +85,7 @@ Meteor.Router.add({
             Session.set('currentTeam', team);
             Session.set('currentProduct', product);
             Session.set('onlyLastRetrospective',0);
+            Session.set('selectedMenu','retrospectives');
 
             var role = getUserRoleForCurrentTeam(product, team);
             if (role != null)

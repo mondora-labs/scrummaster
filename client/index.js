@@ -48,7 +48,7 @@ Template.sidebar.helpers({
         if (currentProduct)
             return currentProduct;
         else
-            return 'notFound' ;
+            return null ;
     },
 
     selectedTeam: function() {
@@ -56,6 +56,14 @@ Template.sidebar.helpers({
         if (currentTeam)
             return currentTeam;
         else
-            return 'notFound';
+            return null;
     }
 });
+
+Template.sidebar.rendered = function() {
+
+    var selectedMenu = Session.get('selectedMenu');
+    if (selectedMenu != null)
+        $('.sidebarMenu .'+selectedMenu).addClass('active');
+
+}

@@ -7,7 +7,7 @@
                 <div class="pull-left header">
                     <h3 class="title">
                         <i class="icon-edit"></i>
-                        Products & Users List
+                        Users List
                     </h3>
                     <h5>
                         Some info...
@@ -47,12 +47,10 @@
                     <span class="breadcrumb-arrow"><span></span></span>
                 </div>
 
-
-
                 <div class="breadcrumb-button">
-          <span class="breadcrumb-label">
-            <i class="icon-edit"></i> Products & Users List
-          </span>
+                    <span class="breadcrumb-label">
+                        <i class="icon-edit"></i>Users List
+                    </span>
                     <span class="breadcrumb-arrow"><span></span></span>
                 </div>
             </div>
@@ -61,8 +59,36 @@
 
     <div class="container-fluid padded">
         <div class="row-fluid">
-            <div class="span6">
+            <div class="span6" id="users-contain">
+                <table id="usersTable" class="ui-widget ui-widget-content">
+                    <thead>
+                    <tr class="ui-widget-header ">
+                        <th>User</th>
+                        <th>Roles</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {{#each usersList}}
+                        <tr>
+                            <td>
+                                <img class="menu-avatar" src="{{img}}"/>
+                                <a href="/user/{{id}}">{{name}}</a>
+                            </td>
+                            <td>
+                                <ul>
+                                    {{#each roles}}
+                                    <li>
+                                        {{role}} of team '<a href="/{{productSlug}}/team/{{teamSlug}}">{{teamName}}</a>'
+                                    </li>
+                                    {{/each}}
+                                </ul>
+                            </td>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
 
+                <!--
                 {{#each productList}}
                 <fieldset style="border: solid 1px #ddd ! important; padding: 1.25em ! important;">
                     <h3>{{name}}</h3>
@@ -87,12 +113,13 @@
                     </ul>
                 </fieldset>
                 {{/each}}
+                -->
             </div>
 
         </div>
     </div>
 
-
+    <!--
     <div class="container-fluid padded">
         <div class="row-fluid">
             <div class="span12">
@@ -125,5 +152,5 @@
             </div>
         </div>
     </div>
-
+      -->
 </template>

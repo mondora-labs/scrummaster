@@ -2,15 +2,17 @@
     <div class="primary-sidebar">
 
     <!-- Main nav -->
-        <ul class="nav nav-collapse collapse nav-collapse-primary">
-            <li class="active">
+        <ul class="nav nav-collapse collapse nav-collapse-primary sidebarMenu">
+            {{#if selectedProduct}}
+            <!--<li class="active">-->
+            <li class="dailyscrum">
                 <span class="glow"></span>
                 <a href="/{{selectedProduct}}/dailyscrum/{{selectedTeam}}">
                     <i class="icon-dashboard icon-2x"></i>
                     <span>Daily scrum</span>
                 </a>
             </li>
-            <li class="dark-nav ">
+            <li class="retrospectives dark-nav ">
                 <span class="glow"></span>
                 <!--   <a class="accordion-toggle collapsed " data-toggle="collapse" href="/{{selectedProduct}}/retrospectives/{{selectedTeam}}"> -->
                 <a href="/{{selectedProduct}}/retrospectives/{{selectedTeam}}">
@@ -21,7 +23,7 @@
                     </span>
                 </a>
             </li>
-            <li class="dark-nav ">
+            <li class="dashboard dark-nav ">
                 <span class="glow"></span>
                 <a href="/{{selectedProduct}}/dashboard/{{selectedTeam}}">
                     <i class="icon-dashboard icon-2x"></i>
@@ -37,6 +39,7 @@
                   <span>Sprints</span>
                 </a>
             </li>
+            {{/if}}
         </ul>
 
     </div>
