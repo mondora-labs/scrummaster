@@ -18,6 +18,15 @@ Meteor.Router.add({
         }
     },
 
+    '/:product/calendar/:team': {
+        to: 'calendar',
+        and: function(product, team) {
+            Session.set('currentTeam', team);
+            Session.set('currentProduct', product);
+            Session.set('selectedMenu','calendar');
+        }
+    },
+
     '/admin': function() {
         Session.set('selectedMenu');
         var adminUser = AdminUsers.findOne({userId : Meteor.userId()});

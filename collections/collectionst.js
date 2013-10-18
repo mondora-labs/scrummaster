@@ -6,6 +6,7 @@ Retrospectives = new Meteor.Collection('retrospectives');
 AdminUsers = new Meteor.Collection('adminUsers');
 UsersSpeaking = new Meteor.Collection('usersSpeaking');
 Canvas = new Meteor.Collection('canvas');
+Events = new Meteor.Collection('events');
 
 
 if (Meteor.isServer) {
@@ -48,5 +49,9 @@ if (Meteor.isServer) {
 
   Meteor.publish( "canvas", function() {
     return Canvas.find();
+  });
+
+  Meteor.publish( "events", function() {
+    return Events.find();
   });
 }

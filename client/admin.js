@@ -347,6 +347,9 @@ Template.creationProdTeamBlock.rendered = function(){
                 DailyScrum.remove(dailyScrumArray[i]._id);
             }
 
+            // TODO - rimuovere anche eventi associati al team e dashboard image
+
+
             var tmpProduct = Products.findOne({slug: productSlug});
 
             if (tmpProduct){

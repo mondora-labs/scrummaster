@@ -100,3 +100,16 @@ Canvas.insert( {
                     team_slug: "moschettieri",
                     dataUrl: "";
                     });
+
+==
+Events.insert( {
+                    product_slug: "matutorbis",
+                    team_slug: "moschettieri",
+                    title: "Meeting",
+                    startDate:"18/10/2013",
+                    startTime:"16:00",
+                    endDate:"18/10/2013"
+                    endTime:"18:00"
+                    allDay:false,
+                    url:""
+                 });

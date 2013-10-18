@@ -1,0 +1,112 @@
+<template name="calendar">
+
+    <div class="container-fluid">
+        <div class="row-fluid">
+
+            <div class="area-top clearfix">
+                <div class="pull-left header">
+                    <h3 class="title">
+                        <i class="icon-edit"></i>
+                        Full Calendar
+                    </h3>
+                    <h5>
+                        calendario degli eventi del team
+                    </h5>
+                </div>
+
+                <ul class="inline pull-right sparkline-box">
+
+                    <li class="sparkline-row">
+                        <h4 class="blue"><span>Commits</span> 847</h4>
+                        <div class="sparkline big" data-color="blue"><!--4,5,3,1,0,10,9,3,0,4--></div>
+                    </li>
+
+                    <li class="sparkline-row">
+                        <h4 class="green"><span>Updates</span> 12</h4>
+                        <div class="sparkline big" data-color="green"><!--24,10,13,15,3,7,8,29,7,14,13,23--></div>
+                    </li>
+
+                    <li class="sparkline-row">
+                        <h4 class="red"><span>Pomodoros</span> 83 so far</h4>
+                        <div class="sparkline big"><!--4,,7,12,12,3,4,5,9,9--></div>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid padded">
+        <div class="row-fluid">
+
+            <!-- Breadcrumb line -->
+
+            <div id="breadcrumbs">
+                <div class="breadcrumb-button blue">
+                    <span class="breadcrumb-label"><i class="icon-home"></i> Home</span>
+                    <span class="breadcrumb-arrow"><span></span></span>
+                </div>
+
+
+
+                <div class="breadcrumb-button">
+                    <span class="breadcrumb-label">
+                        <i class="icon-edit"></i> Calendar
+                    </span>
+                    <span class="breadcrumb-arrow"><span></span></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid padded">
+        <div class="row-fluid">
+
+            {{> fullCalendar}}
+
+        </div>
+    </div>
+</template>
+
+<template name="fullCalendar">
+
+    <div class='lfloat'>
+        <button id="newEventBtn" class="btn btn-blue">New Event</button>
+    </div>
+    <br clear="all"/>
+    <br clear="all"/>
+
+    <div class="span9">
+        <div class="box">
+            <div class="box-header"><span class="title">Full calendar</span></div>
+            <div class="box-content">
+                <div id="fullCalendar"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="new-event-dialog" title="Create new Event">
+        <form>
+            <fieldset>
+                <label for="title">Title</label>
+                <input type="text" id="title" class="text ui-widget-content ui-corner-all" />
+
+                <div id="init">
+                    <label for="startDate">Starting Date</label>
+                    <input type="text" id="startDate" style="width:100px"/>
+
+                </div>
+
+                <label for="endDate">End Date</label>
+                <input type="text" id="endDate" style="width:100px"/>
+
+                <label for="allDayChBox">All Day</label>
+                <input type="checkbox" id="allDayChBox" name="allDayChBox" class="ui-widget-content ui-corner-all"/>
+
+                <label for="url">URL</label>
+                <input type="text" id="url" class="text ui-widget-content ui-corner-all"/>
+
+            </fieldset>
+        </form>
+    </div>
+</template>
