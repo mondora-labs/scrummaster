@@ -160,7 +160,10 @@ Template.retrospectivesList.helpers ({
     },
 
     currentUserImage: function (){
-        return Meteor.user().profile.picture;
+        if (Meteor.user())
+            return Meteor.user().profile.picture;
+        else
+            return null;
     }
 });
 
