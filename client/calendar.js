@@ -1,21 +1,19 @@
 Meteor.subscribe('events');
+var deleteMode = false;
 
 function getEventsArray (product, team){
 
-    /*return [{title:"All Day Event",start:new Date(r,n,1)},
+    /*** Example of JSON Array
+     [{title:"All Day Event",start:new Date(r,n,1)},
      {title:"Long Event",start:new Date(r,n,e-5),end:new Date(r,n,e-2)},
      {id:999,title:"Repeating Event",start:new Date(r,n,e-3,16,0),allDay:!1},
      {id:999,title:"Repeating Event",start:new Date(r,n,e+4,16,0),allDay:!1},
      {title:"Meeting",start:new Date(r,n,e,10,30),allDay:!1},
      {title:"Lunch",start:new Date(r,n,e,12,0),end:new Date(r,n,e,14,0),allDay:!1},
      {title:"Birthday Party",start:new Date(r,n,e+1,19,0),end:new Date(r,n,e+1,22,30),allDay:!1},
-     {title:"Click for Google",start:new Date(r,n,28),end:new Date(r,n,29),url:"http://google.com/"}] ; */
+     {title:"Click for Google",start:new Date(r,n,28),end:new Date(r,n,29),url:"http://google.com/"}] ;
+     ***/
 
-   /* var t = new Date();
-    var e=t.getDate();
-    var n=t.getMonth();
-    var r=t.getFullYear();
-     */
     var events = new Array();
 
     var eventsQuery = Events.find({
@@ -38,8 +36,8 @@ function getEventsArray (product, team){
             title: eventsQuery[i].title,
             start:new Date(startDate[2], startDate[1]-1, startDate[0], startTime[0], startTime[1]),
             end: (endDate.length == 3)? new Date(endDate[2], endDate[1]-1, endDate[0], endTime[0], endTime[1]) : "",
-            allDay: eventsQuery[i].allDay,
-            url: eventsQuery[i].url
+            allDay: eventsQuery[i].allDay /*,
+            url: eventsQuery[i].url         */
         })
     }
 
@@ -51,12 +49,7 @@ function buildTimePicker() {
     var result = document.createElement('span');
     var hours = document.createElement('select');
     hours.setAttribute('class', 'timeSelect hours');
-  /*
-    var option = document.createElement('option');
-    option.setAttribute('value', '-');
-    option.appendChild(document.createTextNode('HH'));
-    hours.appendChild(option);
-    */
+
     for (var h=0; h<24; h++) {
         var option = document.createElement('option');
         option.setAttribute('value', (h<10)?'0'+h : h);
@@ -66,12 +59,7 @@ function buildTimePicker() {
 
     var minutes = document.createElement('select');
     minutes.setAttribute('class', 'timeSelect minutes');
-   /*
-    var option = document.createElement('option');
-    option.setAttribute('value', '-');
-    option.appendChild(document.createTextNode('MM'));
-    minutes.appendChild(option);
-     */
+
     for (var m=0; m<60; m++) {
         var option = document.createElement('option');
         option.setAttribute('value', (m<10)? '0'+m : m);
@@ -96,7 +84,7 @@ Template.fullCalendar.rendered = function() {
 
     $( "#new-event-dialog" ).dialog({
         autoOpen: false,
-        height: 450,
+        height: 400,
         width: 450,
         modal: true,
         buttons: {
@@ -113,7 +101,7 @@ Template.fullCalendar.rendered = function() {
                 var endMinutes = $('#end .minutes').val();
 
                 var allDay = $('#allDayChBox').prop('checked');
-                var url = $('#url').val();
+              //  var url = $('#url').val();
 
                 Events.insert( {
                     product_slug: Session.get('currentProduct'),
@@ -123,8 +111,8 @@ Template.fullCalendar.rendered = function() {
                     startTime: startHour +':'+ startMinutes, //"16:00",
                     endDate: endDate,
                     endTime: endHour +':'+ endMinutes,//"18:00",
-                    allDay: allDay,
-                    url: url
+                    allDay: allDay /*,
+                    url: url         */
                 });
 
                 $( this ).dialog( "close" );
@@ -154,10 +142,11 @@ Template.fullCalendar.rendered = function() {
     });
 
     setTimeout(function(){
+
         $('.fc-event-inner').append(appendDeleteButtons);
         $( ".icon-remove" ).click(function() {
-            alert('[TODO] - da implementare la rimozione');
-            return false;
+            deleteMode = true;
+            $(this.parentElement).click();
         });
 
     }, 2000);
@@ -174,16 +163,13 @@ Template.fullCalendar.rendered = function() {
             right:"month,agendaWeek,agendaDay"},
 
         editable: true,
-  //      droppable: true,
-
         firstDay:1,
-
         //weekends: false,
         weekMode: 'variable',
 
-        dayClick: function() {
+        //dayClick: function() {
            // alert('a day has been clicked!');
-        },
+        //},
 
         events: function(start, end, callback) {
             var t = new Date();
@@ -195,6 +181,23 @@ Template.fullCalendar.rendered = function() {
 
             callback(events);
 
+        },
+        /*
+            eventDragStop: function(event, jsEvent, ui, view) {
+                alert(event.id);
+            },
+          */
+        eventClick: function(calEvent, jsEvent, view) {
+
+            if (deleteMode) {
+                deleteMode = false;
+                var conf = confirm('Deleting event "'+calEvent.title+'"... are you sure?');
+                if (conf == true) {
+                    Events.remove(calEvent.id);
+                    location.reload();
+                }
+                return false;
+            }
         }
     });
 }
